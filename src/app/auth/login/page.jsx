@@ -2,16 +2,60 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { GoogleIcon } from "@/components/icons/GoogleIcon";
+import { loginSchema } from "@/utils/zod";
+import { EyeFilledIcon } from "@/components/icons/EyeFilledIcon";
 import { Button, Input } from "@nextui-org/react";
 import { EyeSlashFilledIcon } from "@/components/icons/EyeSlashFilledIcon";
-import { EyeFilledIcon } from "@/components/icons/EyeFilledIcon";
 
 const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [userLoginLoading, setUserLoginLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
+  const router = useRouter();
+
   const toggleVisibility = () => setIsVisible(!isVisible);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setUserLoginLoading(true);
+
+    try {
+      const zodData = loginSchema.parse({
+        email,
+        password,
+      });
+
+      setError(null);
+
+      const res = await signIn("user-login", {
+        email: zodData.email,
+        password: zodData.password,
+        redirect: false,
+      });
+
+      if (res.error) {
+        alert(res.error);
+      }
+
+      if (res.ok) {
+        alert("Sesión iniciada");
+        router.push("/museums");
+      }
+
+      setCreatingUserLoading(false);
+    } catch (error) {
+      const errors = error?.errors?.map((error) => error.message);
+      setError(errors);
+      setUserLoginLoading(false);
+    }
+  };
 
   return (
     <section className="container mx-auto flex justify-center items-center min-h-screen">
@@ -19,11 +63,11 @@ const LoginPage = () => {
         <div className="w-full md:w-2/4 rounded-2xl flex justify-center items-center flex-col bg-white">
           <div className="mb-3">
             <Image
-              alt="ilustracion"
-              width={140}
-              height={140}
-              src="/ilustracion.jpg"
-              className="w-[150px] md:w-[250px]"
+              alt="ilustracion2"
+              width={500}
+              height={500}
+              src="/ilustracion2.jpg"
+              className="w-[150px] md:w-full"
             />
           </div>
         </div>
@@ -34,12 +78,27 @@ const LoginPage = () => {
               Iniciar Sesión
             </p>
           </div>
-          <form className="mb-3">
+          <form onSubmit={handleSubmit} className="mb-3">
             <div className="flex flex-col gap-3 mb-3">
-              <Input type="email" label="Correo electrónico" />
               <Input
+                isDisabled={userLoginLoading}
+                isClearable
+                type="email"
+                label="Correo electrónico"
+                value={email}
+                onValueChange={setEmail}
+                isInvalid={error?.some((error) => error.email)}
+                errorMessage={error?.find((error) => error.email)?.email}
+              />
+              <Input
+                isDisabled={userLoginLoading}
                 type={isVisible ? "text" : "password"}
                 label="Contraseña"
+                autoComplete="off"
+                value={password}
+                onValueChange={setPassword}
+                isInvalid={error?.some((error) => error.password)}
+                errorMessage={error?.find((error) => error.password)?.password}
                 endContent={
                   <button
                     className="focus:outline-none"
@@ -62,14 +121,36 @@ const LoginPage = () => {
             </div>
             <div className="flex flex-col gap-3">
               <Button
+                isLoading={userLoginLoading}
                 type="submit"
-                color="success"
                 variant="shadow"
                 size="lg"
-                className="w-full"
+                className="w-full bg-black"
+                spinner={
+                  <svg
+                    className="animate-spin h-5 w-5 text-current"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                }
               >
-                <p className="text-white text-lg w-full tracking-widest hover:scale-110 transform transition-transform duration-[0.2s] ease-in-out">
-                  Ingresar
+                <p className="text-white font-semibold text-lg w-full tracking-widest hover:scale-110 transform transition-transform duration-[0.2s] ease-in-out">
+                  {userLoginLoading ? "Ingresando..." : "Ingresar"}
                 </p>
               </Button>
               <button
