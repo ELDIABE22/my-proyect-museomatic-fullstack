@@ -4,6 +4,8 @@ import axios from "axios";
 import DashboardLayout from "@/components/DashboardLayout";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { typesCollection } from "@/utils/autocompleteData";
+import { collectionSchema } from "@/utils/zod";
 import { useEffect, useState } from "react";
 import {
   Autocomplete,
@@ -15,7 +17,6 @@ import {
   Input,
   Textarea,
 } from "@nextui-org/react";
-import { collectionSchema } from "@/utils/zod";
 
 const NewCollectionPage = () => {
   const [name, setName] = useState("");
@@ -33,58 +34,6 @@ const NewCollectionPage = () => {
   const { data: session, status } = useSession();
 
   const router = useRouter();
-
-  const typesCollection = [
-    "Arte",
-    "Historia",
-    "Ciencias Naturales",
-    "Antropología",
-    "Arqueología",
-    "Etnografía",
-    "Fotografía",
-    "Arquitectura",
-    "Artes Decorativas",
-    "Artes Visuales",
-    "Botánica",
-    "Geología",
-    "Zoología",
-    "Mineralogía",
-    "Paleontología",
-    "Religión",
-    "Filatelia",
-    "Numismática",
-    "Herbario",
-    "Insectario",
-    "Ornitario",
-    "Entomología",
-    "Hidrobiología",
-    "Ictiología",
-    "Lacustrología",
-    "Malacología",
-    "Micología",
-    "Myrmecología",
-    "Nematología",
-    "Odonatología",
-    "Pentatomología",
-    "Quelonología",
-    "Rinología",
-    "Serpentología",
-    "Tetrapodología",
-    "Urodeología",
-    "Vespertiliología",
-    "Xilofagia",
-    "Árboles",
-    "Flora",
-    "Fauna",
-    "Minerales",
-    "Fósiles",
-    "Ecoetología",
-    "Conservación",
-    "Investigación",
-    "Educación",
-    "Exposiciones Temporales",
-    "Eventos Especiales",
-  ];
 
   const getMuseum = async () => {
     try {

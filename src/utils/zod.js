@@ -26,6 +26,7 @@ export const museumSchema = z.object({
     openingTime: z.string().min(1, { message: { openingTime: 'Es requerido' } }),
     closingTime: z.string().min(1, { message: { closingTime: 'Es requerido' } }),
     state: z.string().min(1, { message: { state: 'Es requerido' } }).optional(),
+    city: z.string().min(1, { message: { city: 'Es requerido' } }),
 });
 
 export const collectionSchema = z.object({

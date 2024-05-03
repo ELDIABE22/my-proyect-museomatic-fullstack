@@ -1,12 +1,13 @@
 "use client";
 
 import ScrollReveal from "scrollreveal";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { loginSchema } from "@/utils/zod";
 import { Button, Input } from "@nextui-org/react";
 import { EyeFilledIcon } from "@/components/icons/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "@/components/icons/EyeSlashFilledIcon";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const AdminPage = () => {
   const [email, setEmail] = useState("");
@@ -14,6 +15,8 @@ const AdminPage = () => {
   const [error, setError] = useState(null);
   const [userLoginLoading, setUserLoginLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+
+  const router = useRouter();
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 

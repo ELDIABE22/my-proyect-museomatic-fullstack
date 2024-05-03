@@ -1,6 +1,6 @@
-import { deleteImageFromFirebase, uploadFile } from "@/firebase/config";
 import { connection } from "@/utils/museodb";
 import { NextResponse } from "next/server";
+import { deleteImageFromFirebase, uploadFile } from "@/firebase/config";
 
 export async function POST(req) {
     try {
@@ -91,5 +91,26 @@ export async function PUT(req) {
     } catch (error) {
         console.log(error);
         return NextResponse.json({ message: "Error al actualizar la colección", error: error.message });
+    }
+}
+
+export async function DELETE(req) {
+    try {
+        const data = await req.formData();
+        const id = data.get("id");
+        const imageUrlRemove = data.get("imageUrlRemove");
+
+        const idBuffer = Buffer.from(id, 'hex');
+
+        await connection.query('DELETE FROM Coleccion WHERE id = ?', [idBuffer]);
+
+        if (imageUrlRemove) {
+            await deleteImageFromFirebase(imageUrlRemove);
+        }
+
+        return NextResponse.json({ message: 'Colección eliminada' });
+    } catch (error) {
+        console.log(error);
+        return NextResponse.json({ message: 'Error al eliminar la colección', error: error.message });
     }
 }

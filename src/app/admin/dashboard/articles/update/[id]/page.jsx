@@ -4,6 +4,7 @@ import axios from "axios";
 import DashboardLayout from "@/components/DashboardLayout";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { typesCollection } from "@/utils/autocompleteData";
 import { collectionSchema } from "@/utils/zod";
 import { useEffect, useState } from "react";
 import {
@@ -25,6 +26,8 @@ const UpdateCollectionPage = ({ params }) => {
   const [website, setWebsite] = useState("");
   const [itemImage, setItemImage] = useState({ file: null });
   const [error, setError] = useState(null);
+
+  const [deleteEvent, setDeleteEvent] = useState(false);
   const [updateCollection, setUpdateCollection] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -33,58 +36,6 @@ const UpdateCollectionPage = ({ params }) => {
   const { data: session, status } = useSession();
 
   const router = useRouter();
-
-  const typesCollection = [
-    "Arte",
-    "Historia",
-    "Ciencias Naturales",
-    "Antropología",
-    "Arqueología",
-    "Etnografía",
-    "Fotografía",
-    "Arquitectura",
-    "Artes Decorativas",
-    "Artes Visuales",
-    "Botánica",
-    "Geología",
-    "Zoología",
-    "Mineralogía",
-    "Paleontología",
-    "Religión",
-    "Filatelia",
-    "Numismática",
-    "Herbario",
-    "Insectario",
-    "Ornitario",
-    "Entomología",
-    "Hidrobiología",
-    "Ictiología",
-    "Lacustrología",
-    "Malacología",
-    "Micología",
-    "Myrmecología",
-    "Nematología",
-    "Odonatología",
-    "Pentatomología",
-    "Quelonología",
-    "Rinología",
-    "Serpentología",
-    "Tetrapodología",
-    "Urodeología",
-    "Vespertiliología",
-    "Xilofagia",
-    "Árboles",
-    "Flora",
-    "Fauna",
-    "Minerales",
-    "Fósiles",
-    "Ecoetología",
-    "Conservación",
-    "Investigación",
-    "Educación",
-    "Exposiciones Temporales",
-    "Eventos Especiales",
-  ];
 
   const handleEditImage = async (file) => {
     if (file) {
@@ -188,6 +139,36 @@ const UpdateCollectionPage = ({ params }) => {
       const errors = error?.errors?.map((error) => error.message);
       setError(errors);
       setUpdateCollection(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    setDeleteEvent(true);
+
+    const formData = new FormData();
+    formData.append("id", params.id);
+    formData.append(
+      "imageUrlRemove",
+      itemImage.image.imageUrlRemove || itemImage.image.imageUrlNew
+    );
+
+    try {
+      const res = await axios.delete("/api/admin/collection", {
+        data: formData,
+      });
+      const { message } = res.data;
+
+      if (message === "Colección eliminada") {
+        alert(message);
+        router.push("/admin/dashboard/articles");
+      } else {
+        alert(message);
+      }
+
+      setDeleteEvent(false);
+    } catch (error) {
+      console.log("Error, intentar más tarder: ", error);
+      setDeleteEvent(false);
     }
   };
 
@@ -321,6 +302,7 @@ const UpdateCollectionPage = ({ params }) => {
                 </label>
               </Card>
               <Button
+                isDisabled={deleteEvent}
                 isLoading={updateCollection}
                 variant="shadow"
                 type="submit"
@@ -328,6 +310,18 @@ const UpdateCollectionPage = ({ params }) => {
               >
                 <p className="text-white font-semibold text-lg w-full tracking-widest hover:scale-110 transform transition-transform duration-[0.2s] ease-in-out">
                   {updateCollection ? "Actualizando..." : "Actualizar"}
+                </p>
+              </Button>
+              <Button
+                isDisabled={updateCollection}
+                isLoading={deleteEvent}
+                variant="shadow"
+                type="buttom"
+                className="w-full bg-red-500"
+                onPress={handleDelete}
+              >
+                <p className="text-white font-semibold text-lg w-full tracking-widest hover:scale-110 transform transition-transform duration-[0.2s] ease-in-out">
+                  {deleteEvent ? "Eliminando..." : "Eliminar"}
                 </p>
               </Button>
             </form>

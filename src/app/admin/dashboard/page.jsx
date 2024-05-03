@@ -1,10 +1,25 @@
 "use client";
 
 import DashboardLayout from "@/components/DashboardLayout";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 const DashboardPage = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      if (session?.user.usuario_admin !== 1) {
+        return router.push("/admin");
+      }
+    } else if (status === "unauthenticated") {
+      return router.push("/admin");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
 
   return (
     <DashboardLayout>

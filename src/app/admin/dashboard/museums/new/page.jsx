@@ -1,9 +1,16 @@
 "use client";
 
+import axios from "axios";
 import DashboardLayout from "@/components/DashboardLayout";
 import { useState } from "react";
+import { cityList } from "@/utils/autocompleteData";
 import { useRouter } from "next/navigation";
+import { TimeInput } from "@nextui-org/date-input";
+import { DateInput } from "@nextui-org/date-input";
+import { museumSchema } from "@/utils/zod";
 import {
+  Autocomplete,
+  AutocompleteItem,
   Button,
   Card,
   CardBody,
@@ -11,15 +18,12 @@ import {
   Input,
   Textarea,
 } from "@nextui-org/react";
-import { TimeInput } from "@nextui-org/date-input";
-import { DateInput } from "@nextui-org/date-input";
-import { museumSchema } from "@/utils/zod";
-import axios from "axios";
 
 const NewMuseumsPage = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
   const [foundingDate, setFoundingDate] = useState(null);
   const [openingTime, setOpeningTime] = useState(null);
   const [closingTime, setClosingTime] = useState(null);
@@ -48,6 +52,7 @@ const NewMuseumsPage = () => {
         foundingDate: foundingDate ? "Fecha" : "",
         openingTime: openingTime ? "Time" : "",
         closingTime: closingTime ? "Time" : "",
+        city,
       });
 
       setError(null);
@@ -66,6 +71,7 @@ const NewMuseumsPage = () => {
           closingTime,
           website,
           foundingDate,
+          city,
         })
       );
 
@@ -114,16 +120,37 @@ const NewMuseumsPage = () => {
                 error?.find((error) => error.description)?.description
               }
             />
-            <Input
-              isDisabled={creatingMuseum}
-              isClearable
-              type="text"
-              label="Dirección"
-              value={address}
-              onValueChange={setAddress}
-              isInvalid={error?.some((error) => error.address)}
-              errorMessage={error?.find((error) => error.address)?.address}
-            />
+            <div className="flex gap-5">
+              <Autocomplete
+                isDisabled={creatingMuseum}
+                label="Ciudad"
+                selectedKey={city}
+                onSelectionChange={(e) => {
+                  if (e === null) {
+                    setCity("");
+                  } else {
+                    setCity(e);
+                  }
+                }}
+                isInvalid={error?.some((error) => error.city)}
+                errorMessage={error?.find((error) => error.city)?.city}
+              >
+                {cityList.length > 0 &&
+                  cityList.map((estado) => (
+                    <AutocompleteItem key={estado}>{estado}</AutocompleteItem>
+                  ))}
+              </Autocomplete>
+              <Input
+                isDisabled={creatingMuseum}
+                isClearable
+                type="text"
+                label="Dirección"
+                value={address}
+                onValueChange={setAddress}
+                isInvalid={error?.some((error) => error.address)}
+                errorMessage={error?.find((error) => error.address)?.address}
+              />
+            </div>
             <DateInput
               isDisabled={creatingMuseum}
               label={"Fecha de fundación"}

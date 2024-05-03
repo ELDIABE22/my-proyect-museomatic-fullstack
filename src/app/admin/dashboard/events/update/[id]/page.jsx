@@ -4,6 +4,8 @@ import axios from "axios";
 import DashboardLayout from "@/components/DashboardLayout";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { eventSchema } from "@/utils/zod";
+import { typesEvents } from "@/utils/autocompleteData";
 import { parseDate, Time } from "@internationalized/date";
 import { useEffect, useState } from "react";
 import { DateInput, TimeInput } from "@nextui-org/date-input";
@@ -17,7 +19,6 @@ import {
   Input,
   Textarea,
 } from "@nextui-org/react";
-import { eventSchema } from "@/utils/zod";
 
 const UpdateEventsPage = ({ params }) => {
   const [name, setName] = useState("");
@@ -43,37 +44,6 @@ const UpdateEventsPage = ({ params }) => {
   const router = useRouter();
 
   const stateEvent = ["Pendiente", "En curso", "Finalizado"];
-
-  const typesEvents = [
-    "Exposiciones temporales",
-    "Exposiciones permanentes",
-    "Visitas guiadas",
-    "Talleres",
-    "Conciertos",
-    "Obras de teatro",
-    "Proyecciones audiovisuales",
-    "Charlas",
-    "Conferencias",
-    "Presentaciones de libros",
-    "Eventos para niños",
-    "Eventos familiares",
-    "Festivales",
-    "Ciclos de cine",
-    "Actividades educativas",
-    "Visitas nocturnas",
-    "Días de entrada gratuita",
-    "Concursos",
-    "Lanzamientos de productos",
-    "Inauguraciones",
-    "Mesas redondas",
-    "Simposios",
-    "Congresos",
-    "Eventos gastronómicos",
-    "Eventos literarios",
-    "Eventos de bienestar",
-    "Eventos inclusivos",
-    "Eventos virtuales",
-  ];
 
   const handleEditImage = async (file) => {
     if (file) {

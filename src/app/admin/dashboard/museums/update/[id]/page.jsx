@@ -2,13 +2,14 @@
 
 import axios from "axios";
 import DashboardLayout from "@/components/DashboardLayout";
+import { cityList } from "@/utils/autocompleteData";
 import { useRouter } from "next/navigation";
 import { TimeInput } from "@nextui-org/date-input";
 import { DateInput } from "@nextui-org/date-input";
 import { useSession } from "next-auth/react";
 import { museumSchema } from "@/utils/zod";
-import { useEffect, useState } from "react";
 import { parseDate, Time } from "@internationalized/date";
+import { useEffect, useState } from "react";
 import {
   Autocomplete,
   AutocompleteItem,
@@ -24,6 +25,7 @@ const UpdateMuseumPage = ({ params }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
   const [foundingDate, setFoundingDate] = useState(null);
   const [openingTime, setOpeningTime] = useState(null);
   const [closingTime, setClosingTime] = useState(null);
@@ -31,6 +33,8 @@ const UpdateMuseumPage = ({ params }) => {
   const [itemImage, setItemImage] = useState({ file: null });
   const [state, setState] = useState("");
   const [error, setError] = useState(null);
+
+  const [deleteEvent, setDeleteEvent] = useState(false);
   const [updatedMuseum, setUpdateMuseum] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -62,6 +66,7 @@ const UpdateMuseumPage = ({ params }) => {
       setWebsite(data.sitio_web);
       setItemImage({ image: { imageUrlNew: data.imagenURL }, file: null });
       setState(data.estado === "activo" ? "Activo" : "Inactivo");
+      setCity(data.ciudad);
 
       setLoading(false);
     } catch (error) {
@@ -92,6 +97,7 @@ const UpdateMuseumPage = ({ params }) => {
         openingTime: openingTime ? "Time" : "",
         closingTime: closingTime ? "Time" : "",
         state,
+        city,
       });
 
       setError(null);
@@ -119,6 +125,7 @@ const UpdateMuseumPage = ({ params }) => {
           state,
           website,
           foundingDate,
+          city,
         })
       );
 
@@ -138,6 +145,34 @@ const UpdateMuseumPage = ({ params }) => {
       const errors = error?.errors?.map((error) => error.message);
       setError(errors);
       setUpdateMuseum(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    setDeleteEvent(true);
+
+    const formData = new FormData();
+    formData.append("id", params.id);
+    formData.append(
+      "imageUrlRemove",
+      itemImage.image.imageUrlRemove || itemImage.image.imageUrlNew
+    );
+
+    try {
+      const res = await axios.delete("/api/admin/museum", { data: formData });
+      const { message } = res.data;
+
+      if (message === "Museo eliminado") {
+        alert(message);
+        router.push("/admin/dashboard/museums");
+      } else {
+        alert(message);
+      }
+
+      setDeleteEvent(false);
+    } catch (error) {
+      console.log("Error, intentar más tarder: ", error);
+      setDeleteEvent(false);
     }
   };
 
@@ -185,16 +220,37 @@ const UpdateMuseumPage = ({ params }) => {
                   error?.find((error) => error.description)?.description
                 }
               />
-              <Input
-                isDisabled={updatedMuseum}
-                isClearable
-                type="text"
-                label="Dirección"
-                value={address}
-                onValueChange={setAddress}
-                isInvalid={error?.some((error) => error.address)}
-                errorMessage={error?.find((error) => error.address)?.address}
-              />
+              <div className="flex gap-5">
+                <Autocomplete
+                  isDisabled={updatedMuseum}
+                  label="Ciudad"
+                  selectedKey={city}
+                  onSelectionChange={(e) => {
+                    if (e === null) {
+                      setCity("");
+                    } else {
+                      setCity(e);
+                    }
+                  }}
+                  isInvalid={error?.some((error) => error.city)}
+                  errorMessage={error?.find((error) => error.city)?.city}
+                >
+                  {cityList.length > 0 &&
+                    cityList.map((estado) => (
+                      <AutocompleteItem key={estado}>{estado}</AutocompleteItem>
+                    ))}
+                </Autocomplete>
+                <Input
+                  isDisabled={updatedMuseum}
+                  isClearable
+                  type="text"
+                  label="Dirección"
+                  value={address}
+                  onValueChange={setAddress}
+                  isInvalid={error?.some((error) => error.address)}
+                  errorMessage={error?.find((error) => error.address)?.address}
+                />
+              </div>
               <DateInput
                 isDisabled={updatedMuseum}
                 label={"Fecha de fundación"}
@@ -283,6 +339,7 @@ const UpdateMuseumPage = ({ params }) => {
                 </label>
               </Card>
               <Button
+                isDisabled={deleteEvent}
                 isLoading={updatedMuseum}
                 variant="shadow"
                 type="submit"
@@ -290,6 +347,18 @@ const UpdateMuseumPage = ({ params }) => {
               >
                 <p className="text-white font-semibold text-lg w-full tracking-widest hover:scale-110 transform transition-transform duration-[0.2s] ease-in-out">
                   {updatedMuseum ? "Actualizando..." : "Actualizar"}
+                </p>
+              </Button>
+              <Button
+                isDisabled={updatedMuseum}
+                isLoading={deleteEvent}
+                variant="shadow"
+                type="buttom"
+                className="w-full bg-red-500"
+                onPress={handleDelete}
+              >
+                <p className="text-white font-semibold text-lg w-full tracking-widest hover:scale-110 transform transition-transform duration-[0.2s] ease-in-out">
+                  {deleteEvent ? "Eliminando..." : "Eliminar"}
                 </p>
               </Button>
             </form>

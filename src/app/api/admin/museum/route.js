@@ -36,10 +36,11 @@ export async function POST(req) {
             formattedOpeningTime,
             formattedClosingTime,
             dataElemnet.website,
-            formattedDate
+            formattedDate,
+            dataElemnet.city,
         ];
 
-        await connection.query('INSERT INTO Museo (nombre, direccion, descripcion, imagenURL, hora_apertura, hora_cierre, sitio_web, fecha_fundacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', values);
+        await connection.query('INSERT INTO Museo (nombre, direccion, descripcion, imagenURL, hora_apertura, hora_cierre, sitio_web, fecha_fundacion, ciudad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', values);
 
         return NextResponse.json({ message: "Museo agregado" });
     } catch (error) {
@@ -113,14 +114,36 @@ export async function PUT(req) {
             dataElemnet.state,
             dataElemnet.website,
             formattedDate,
+            dataElemnet.city,
             id
         ];
 
-        await connection.query('UPDATE Museo SET nombre = ?, direccion = ?, descripcion = ?, imagenURL = ?, hora_apertura = ?, hora_cierre = ?, estado = ?, sitio_web = ?, fecha_fundacion = ? WHERE id = UUID_TO_BIN(?)', values);
+        await connection.query('UPDATE Museo SET nombre = ?, direccion = ?, descripcion = ?, imagenURL = ?, hora_apertura = ?, hora_cierre = ?, estado = ?, sitio_web = ?, fecha_fundacion = ?, ciudad = ? WHERE id = UUID_TO_BIN(?)', values);
 
         return NextResponse.json({ message: "Museo actualizado" });
     } catch (error) {
         console.log(error);
         return NextResponse.json({ message: "Error, inténtalo más tarde", error: error.message });
+    }
+}
+
+export async function DELETE(req) {
+    try {
+        const data = await req.formData();
+        const id = data.get("id");
+        const imageUrlRemove = data.get("imageUrlRemove");
+
+        const idBuffer = Buffer.from(id, 'hex');
+
+        await connection.query('DELETE FROM Museo WHERE id = ?', [idBuffer]);
+
+        if (imageUrlRemove) {
+            await deleteImageFromFirebase(imageUrlRemove);
+        }
+
+        return NextResponse.json({ message: 'Museo eliminado' });
+    } catch (error) {
+        console.log(error);
+        return NextResponse.json({ message: 'Error al eliminar el evento', error: error.message });
     }
 }

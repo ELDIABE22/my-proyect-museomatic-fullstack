@@ -1,18 +1,29 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { SearchIcon } from "./icons/SearchIcon";
+import { DeleteIcon } from "./icons/DeleteIcon";
+import { signOut, useSession } from "next-auth/react";
 import {
+  Avatar,
+  AvatarIcon,
   Button,
   Divider,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   Input,
   Select,
   SelectItem,
+  Spinner,
   Tooltip,
+  User,
 } from "@nextui-org/react";
-import { SearchIcon } from "./icons/SearchIcon";
-import { useRouter } from "next/navigation";
-import { DeleteIcon } from "./icons/DeleteIcon";
 
 const Navbar = () => {
+  const { data: session, status } = useSession();
+
   const router = useRouter();
 
   return (
@@ -37,22 +48,58 @@ const Navbar = () => {
           />
         </div>
         <div className="flex gap-3 items-center">
-          <Button
-            radius="none"
-            variant="ghost"
-            onPress={() => router.push("/auth/login")}
-            className="bg-white text-black"
-          >
-            Iniciar Sesión
-          </Button>
-          <Button
-            radius="none"
-            variant="shadow"
-            onPress={() => router.push("/auth/register")}
-            className="bg-black text-white"
-          >
-            Registrarse
-          </Button>
+          {status === "loading" && <Spinner color="white" />}
+
+          {status === "authenticated" && (
+            <Dropdown placement="bottom-start">
+              <DropdownTrigger>
+                <User
+                  as="button"
+                  avatarProps={{
+                    isBordered: true,
+                  }}
+                  className="transition-transform"
+                  description={session?.user.usuario_admin === 1 && "Admin"}
+                  name={session?.user.nombre}
+                />
+              </DropdownTrigger>
+              <DropdownMenu aria-label="User Actions" variant="flat">
+                <DropdownItem key="profile" className="h-14 gap-2">
+                  <p className="font-bold">{session?.user.email}</p>
+                </DropdownItem>
+                <DropdownItem key="tickets">Tiquetes</DropdownItem>
+                <DropdownItem key="settings">Configuración</DropdownItem>
+                <DropdownItem
+                  key="signoff"
+                  className="text-danger"
+                  color="danger"
+                  onPress={signOut}
+                >
+                  Cerrar Sesión
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          )}
+          {status === "unauthenticated" && (
+            <>
+              <Button
+                radius="none"
+                variant="ghost"
+                onPress={() => router.push("/auth/login")}
+                className="bg-white text-black"
+              >
+                Iniciar Sesión
+              </Button>
+              <Button
+                radius="none"
+                variant="shadow"
+                onPress={() => router.push("/auth/register")}
+                className="bg-black text-white"
+              >
+                Registrarse
+              </Button>
+            </>
+          )}
         </div>
       </div>
       <Divider />
