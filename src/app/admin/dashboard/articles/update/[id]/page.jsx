@@ -197,7 +197,7 @@ const UpdateCollectionPage = ({ params }) => {
           <div>
             <form onSubmit={handleUpdate} className="flex flex-col gap-5">
               <Input
-                isDisabled={updateCollection}
+                isDisabled={updateCollection || deleteEvent}
                 isClearable
                 type="text"
                 label="Nombre"
@@ -207,7 +207,7 @@ const UpdateCollectionPage = ({ params }) => {
                 errorMessage={error?.find((error) => error.name)?.name}
               />
               <Textarea
-                isDisabled={updateCollection}
+                isDisabled={updateCollection || deleteEvent}
                 label="Descripción"
                 value={description}
                 onValueChange={setDescription}
@@ -217,7 +217,7 @@ const UpdateCollectionPage = ({ params }) => {
                 }
               />
               <Autocomplete
-                isDisabled={updateCollection}
+                isDisabled={updateCollection || deleteEvent}
                 label="Museo"
                 selectedKey={idMuseum}
                 onSelectionChange={(e) => {
@@ -238,7 +238,7 @@ const UpdateCollectionPage = ({ params }) => {
                   ))}
               </Autocomplete>
               <Autocomplete
-                isDisabled={updateCollection}
+                isDisabled={updateCollection || deleteEvent}
                 label="Tipo de colección"
                 selectedKey={typeCollection}
                 onSelectionChange={(e) => {
@@ -259,7 +259,7 @@ const UpdateCollectionPage = ({ params }) => {
                   ))}
               </Autocomplete>
               <Input
-                isDisabled={updateCollection}
+                isDisabled={updateCollection || deleteEvent}
                 isClearable
                 type="text"
                 label="Sitio web"
@@ -267,7 +267,11 @@ const UpdateCollectionPage = ({ params }) => {
                 onValueChange={setWebsite}
               />
 
-              <Card shadow="sm" isPressable>
+              <Card
+                shadow="sm"
+                isPressable
+                isDisabled={updateCollection || deleteEvent}
+              >
                 <label className="w-full cursor-pointer">
                   <input
                     type="file"

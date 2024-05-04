@@ -248,7 +248,7 @@ const NewEventsPage = () => {
                   }
                 />
               </div>
-              <Card shadow="sm" isPressable>
+              <Card shadow="sm" isPressable isDisabled={creatingEvent}>
                 <label className="w-full cursor-pointer">
                   <input
                     type="file"

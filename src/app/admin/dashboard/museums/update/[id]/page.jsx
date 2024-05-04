@@ -201,7 +201,7 @@ const UpdateMuseumPage = ({ params }) => {
           <div>
             <form onSubmit={handleUpdate} className="flex flex-col gap-5">
               <Input
-                isDisabled={updatedMuseum}
+                isDisabled={updatedMuseum || deleteEvent}
                 isClearable
                 type="text"
                 label="Nombre"
@@ -211,7 +211,7 @@ const UpdateMuseumPage = ({ params }) => {
                 errorMessage={error?.find((error) => error.name)?.name}
               />
               <Textarea
-                isDisabled={updatedMuseum}
+                isDisabled={updatedMuseum || deleteEvent}
                 label="Descripción"
                 value={description}
                 onValueChange={setDescription}
@@ -222,7 +222,7 @@ const UpdateMuseumPage = ({ params }) => {
               />
               <div className="flex gap-5">
                 <Autocomplete
-                  isDisabled={updatedMuseum}
+                  isDisabled={updatedMuseum || deleteEvent}
                   label="Ciudad"
                   selectedKey={city}
                   onSelectionChange={(e) => {
@@ -241,7 +241,7 @@ const UpdateMuseumPage = ({ params }) => {
                     ))}
                 </Autocomplete>
                 <Input
-                  isDisabled={updatedMuseum}
+                  isDisabled={updatedMuseum || deleteEvent}
                   isClearable
                   type="text"
                   label="Dirección"
@@ -252,7 +252,7 @@ const UpdateMuseumPage = ({ params }) => {
                 />
               </div>
               <DateInput
-                isDisabled={updatedMuseum}
+                isDisabled={updatedMuseum || deleteEvent}
                 label={"Fecha de fundación"}
                 value={foundingDate}
                 onChange={setFoundingDate}
@@ -263,14 +263,14 @@ const UpdateMuseumPage = ({ params }) => {
               />
               <div className="flex gap-3">
                 <TimeInput
-                  isDisabled={updatedMuseum}
+                  isDisabled={updatedMuseum || deleteEvent}
                   label="Hora de apertura"
                   value={openingTime}
                   onChange={setOpeningTime}
                   isRequired={error?.some((error) => error.openingTime)}
                 />
                 <TimeInput
-                  isDisabled={updatedMuseum}
+                  isDisabled={updatedMuseum || deleteEvent}
                   label="Hora de cierre"
                   value={closingTime}
                   onChange={setClosingTime}
@@ -278,7 +278,7 @@ const UpdateMuseumPage = ({ params }) => {
                 />
               </div>
               <Autocomplete
-                isDisabled={updatedMuseum}
+                isDisabled={updatedMuseum || deleteEvent}
                 label="Estado del museo"
                 selectedKey={state}
                 onSelectionChange={(e) => {
@@ -297,14 +297,18 @@ const UpdateMuseumPage = ({ params }) => {
                   ))}
               </Autocomplete>
               <Input
-                isDisabled={updatedMuseum}
+                isDisabled={updatedMuseum || deleteEvent}
                 isClearable
                 type="text"
                 label="Sitio web"
                 value={website}
                 onValueChange={setWebsite}
               />
-              <Card shadow="sm" isPressable>
+              <Card
+                shadow="sm"
+                isPressable
+                isDisabled={updatedMuseum || deleteEvent}
+              >
                 <label className="w-full cursor-pointer">
                   <input
                     type="file"

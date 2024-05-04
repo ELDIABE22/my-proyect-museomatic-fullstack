@@ -205,7 +205,7 @@ const NewCollectionPage = () => {
                 onValueChange={setWebsite}
               />
 
-              <Card shadow="sm" isPressable>
+              <Card shadow="sm" isPressable isDisabled={creatingCollection}>
                 <label className="w-full cursor-pointer">
                   <input
                     type="file"

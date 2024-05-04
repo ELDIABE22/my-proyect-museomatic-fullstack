@@ -186,7 +186,7 @@ const NewMuseumsPage = () => {
               onValueChange={setWebsite}
             />
 
-            <Card shadow="sm" isPressable>
+            <Card shadow="sm" isPressable isDisabled={creatingMuseum}>
               <label className="w-full cursor-pointer">
                 <input
                   type="file"

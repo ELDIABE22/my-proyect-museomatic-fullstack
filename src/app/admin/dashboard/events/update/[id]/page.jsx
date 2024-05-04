@@ -220,7 +220,7 @@ const UpdateEventsPage = ({ params }) => {
           <div>
             <form onSubmit={handleUpdate} className="flex flex-col gap-5">
               <Input
-                isDisabled={updateEvent}
+                isDisabled={updateEvent || deleteEvent}
                 isClearable
                 type="text"
                 label="Nombre"
@@ -230,7 +230,7 @@ const UpdateEventsPage = ({ params }) => {
                 errorMessage={error?.find((error) => error.name)?.name}
               />
               <Textarea
-                isDisabled={updateEvent}
+                isDisabled={updateEvent || deleteEvent}
                 label="Descripción"
                 value={description}
                 onValueChange={setDescription}
@@ -240,7 +240,7 @@ const UpdateEventsPage = ({ params }) => {
                 }
               />
               <Autocomplete
-                isDisabled={updateEvent}
+                isDisabled={updateEvent || deleteEvent}
                 label="Museo"
                 selectedKey={idMuseum}
                 onSelectionChange={(e) => {
@@ -261,7 +261,7 @@ const UpdateEventsPage = ({ params }) => {
                   ))}
               </Autocomplete>
               <Autocomplete
-                isDisabled={updateEvent}
+                isDisabled={updateEvent || deleteEvent}
                 label="Tipo de evento"
                 selectedKey={typeEvent}
                 onSelectionChange={(e) => {
@@ -283,7 +283,7 @@ const UpdateEventsPage = ({ params }) => {
               </Autocomplete>
               <div className="flex gap-5">
                 <DateInput
-                  isDisabled={updateEvent}
+                  isDisabled={updateEvent || deleteEvent}
                   label={"Fecha del evento"}
                   value={eventDate}
                   onChange={setEventDate}
@@ -293,7 +293,7 @@ const UpdateEventsPage = ({ params }) => {
                   }
                 />
                 <TimeInput
-                  isDisabled={updateEvent}
+                  isDisabled={updateEvent || deleteEvent}
                   label="Hora del evento"
                   value={eventTime}
                   onChange={setEventTime}
@@ -302,7 +302,7 @@ const UpdateEventsPage = ({ params }) => {
               </div>
               <div className="flex gap-5">
                 <Input
-                  isDisabled={updateEvent}
+                  isDisabled={updateEvent || deleteEvent}
                   isClearable
                   type="number"
                   label="Precio"
@@ -312,7 +312,7 @@ const UpdateEventsPage = ({ params }) => {
                   errorMessage={error?.find((error) => error.price)?.price}
                 />
                 <Input
-                  isDisabled={updateEvent}
+                  isDisabled={updateEvent || deleteEvent}
                   isClearable
                   type="number"
                   label="Capacidad"
@@ -325,7 +325,7 @@ const UpdateEventsPage = ({ params }) => {
                 />
               </div>
               <Autocomplete
-                isDisabled={updateEvent}
+                isDisabled={updateEvent || deleteEvent}
                 label="Estado del museo"
                 selectedKey={state}
                 onSelectionChange={(e) => {
@@ -343,7 +343,11 @@ const UpdateEventsPage = ({ params }) => {
                     <AutocompleteItem key={estado}>{estado}</AutocompleteItem>
                   ))}
               </Autocomplete>
-              <Card shadow="sm" isPressable>
+              <Card
+                shadow="sm"
+                isPressable
+                isDisabled={updateEvent || deleteEvent}
+              >
                 <label className="w-full cursor-pointer">
                   <input
                     type="file"
