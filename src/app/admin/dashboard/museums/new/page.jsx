@@ -24,6 +24,7 @@ const NewMuseumsPage = () => {
   const [description, setDescription] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
+  const [entryPrice, setEntryPrice] = useState("");
   const [foundingDate, setFoundingDate] = useState(null);
   const [openingTime, setOpeningTime] = useState(null);
   const [closingTime, setClosingTime] = useState(null);
@@ -53,6 +54,7 @@ const NewMuseumsPage = () => {
         openingTime: openingTime ? "Time" : "",
         closingTime: closingTime ? "Time" : "",
         city,
+        entryPrice,
       });
 
       setError(null);
@@ -72,6 +74,7 @@ const NewMuseumsPage = () => {
           website,
           foundingDate,
           city,
+          entryPrice,
         })
       );
 
@@ -177,6 +180,18 @@ const NewMuseumsPage = () => {
                 isRequired={error?.some((error) => error.closingTime)}
               />
             </div>
+            <Input
+              isDisabled={creatingMuseum}
+              isClearable
+              type="number"
+              label="Precio entrada"
+              value={entryPrice}
+              onValueChange={setEntryPrice}
+              isInvalid={error?.some((error) => error.entryPrice)}
+              errorMessage={
+                error?.find((error) => error.entryPrice)?.entryPrice
+              }
+            />
             <Input
               isDisabled={creatingMuseum}
               isClearable

@@ -38,9 +38,10 @@ export async function POST(req) {
             dataElemnet.website,
             formattedDate,
             dataElemnet.city,
+            dataElemnet.entryPrice,
         ];
 
-        await connection.query('INSERT INTO Museo (nombre, direccion, descripcion, imagenURL, hora_apertura, hora_cierre, sitio_web, fecha_fundacion, ciudad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', values);
+        await connection.query('INSERT INTO Museo (nombre, direccion, descripcion, imagenURL, hora_apertura, hora_cierre, sitio_web, fecha_fundacion, ciudad, precio_entrada) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', values);
 
         return NextResponse.json({ message: "Museo agregado" });
     } catch (error) {
@@ -115,10 +116,11 @@ export async function PUT(req) {
             dataElemnet.website,
             formattedDate,
             dataElemnet.city,
+            dataElemnet.entryPrice,
             id
         ];
 
-        await connection.query('UPDATE Museo SET nombre = ?, direccion = ?, descripcion = ?, imagenURL = ?, hora_apertura = ?, hora_cierre = ?, estado = ?, sitio_web = ?, fecha_fundacion = ?, ciudad = ? WHERE id = UUID_TO_BIN(?)', values);
+        await connection.query('UPDATE Museo SET nombre = ?, direccion = ?, descripcion = ?, imagenURL = ?, hora_apertura = ?, hora_cierre = ?, estado = ?, sitio_web = ?, fecha_fundacion = ?, ciudad = ?, precio_entrada = ? WHERE id = UUID_TO_BIN(?)', values);
 
         return NextResponse.json({ message: "Museo actualizado" });
     } catch (error) {

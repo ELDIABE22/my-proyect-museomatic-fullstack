@@ -26,6 +26,7 @@ const UpdateMuseumPage = ({ params }) => {
   const [description, setDescription] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
+  const [entryPrice, setEntryPrice] = useState("");
   const [foundingDate, setFoundingDate] = useState(null);
   const [openingTime, setOpeningTime] = useState(null);
   const [closingTime, setClosingTime] = useState(null);
@@ -67,6 +68,7 @@ const UpdateMuseumPage = ({ params }) => {
       setItemImage({ image: { imageUrlNew: data.imagenURL }, file: null });
       setState(data.estado === "activo" ? "Activo" : "Inactivo");
       setCity(data.ciudad);
+      setEntryPrice(data.precio_entrada);
 
       setLoading(false);
     } catch (error) {
@@ -98,6 +100,7 @@ const UpdateMuseumPage = ({ params }) => {
         closingTime: closingTime ? "Time" : "",
         state,
         city,
+        entryPrice,
       });
 
       setError(null);
@@ -126,6 +129,7 @@ const UpdateMuseumPage = ({ params }) => {
           website,
           foundingDate,
           city,
+          entryPrice,
         })
       );
 
@@ -277,6 +281,18 @@ const UpdateMuseumPage = ({ params }) => {
                   isRequired={error?.some((error) => error.closingTime)}
                 />
               </div>
+              <Input
+                isDisabled={updatedMuseum || deleteEvent}
+                isClearable
+                type="number"
+                label="Precio entrada"
+                value={entryPrice}
+                onValueChange={setEntryPrice}
+                isInvalid={error?.some((error) => error.entryPrice)}
+                errorMessage={
+                  error?.find((error) => error.entryPrice)?.entryPrice
+                }
+              />
               <Autocomplete
                 isDisabled={updatedMuseum || deleteEvent}
                 label="Estado del museo"
