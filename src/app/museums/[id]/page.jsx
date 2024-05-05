@@ -5,7 +5,7 @@ import axios from "axios";
 import Image from "next/image";
 import MapIcon from "@/components/icons/MapIcon";
 import TabsMuseum from "@/components/TabsMuseum";
-import { Divider } from "@nextui-org/react";
+import { Divider, Link } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { formatearFecha, formatearHora } from "@/utils/formateDate";
 
@@ -56,7 +56,11 @@ const MuseumPage = ({ params }) => {
         const idBuffer = Buffer.from(ev.id.data);
         const idString = idBuffer.toString("hex");
 
-        return { ...ev, id: idString };
+        // Formatea las fechas y horas
+        const fecha = formatearFecha(ev.fecha);
+        const hora = formatearHora(ev.hora);
+
+        return { ...ev, id: idString, fecha, hora };
       });
 
       setCollections(collections);
@@ -74,7 +78,7 @@ const MuseumPage = ({ params }) => {
   }, []);
 
   return (
-    <section className="bg-platinum min-h-screen">
+    <section>
       {loading ? (
         <p className="text-2xl font-bold text-center">Cargando...</p>
       ) : (
@@ -92,26 +96,34 @@ const MuseumPage = ({ params }) => {
           </div>
 
           {/* Info del museo */}
-          <div className="container mx-auto flex flex-col gap-4 mb-5">
+          <div className="container px-2 mx-auto flex flex-col gap-4 mb-5">
             <div className="flex gap-2">
               <MapIcon />
               <p className="font-semibold">{museum.ciudad}</p>
             </div>
             <div>
-              <p className="font-bold text-lg">Detalles de ubicación</p>
+              <p className="font-bold text-base sm:text-lg">
+                Detalles de ubicación
+              </p>
               <span>{museum.direccion}</span>
             </div>
             <div>
-              <p className="font-bold text-lg">Fecha de fundación</p>
+              <p className="font-bold text-base sm:text-lg">
+                Fecha de fundación
+              </p>
               <span>{museum.fecha_fundacion}</span>
             </div>
             <div>
-              <p className="font-bold text-lg">Acerca de este museo</p>
+              <p className="font-bold  text-base sm:text-lg">
+                Acerca de este museo
+              </p>
               <span>{museum.descripcion}</span>
             </div>
             <div>
-              <p className="font-bold text-lg">Hora de apertura y cierre</p>
-              <div className="flex gap-2">
+              <p className="font-bold  text-base sm:text-lg">
+                Hora de apertura y cierre
+              </p>
+              <div className="flex items-center gap-2">
                 <Clock />
                 <span>{museum.hora_apertura}</span>
                 {"-"}
@@ -119,12 +131,21 @@ const MuseumPage = ({ params }) => {
               </div>
             </div>
             <div>
-              <p className="font-bold text-lg">Precio de entrada</p>
-              <span>$ 5.000,00</span>
+              <p className="font-bold  text-base sm:text-lg">
+                Precio de entrada
+              </p>
+              <span>$ {museum.precio_entrada}</span>
             </div>
             <div>
-              <p className="font-bold text-lg">Sitio web oficial</p>
-              <span>{museum.sitio_web}</span>
+              <p className="font-bold text-base sm:text-lg">
+                Sitio web oficial
+              </p>
+              <Link
+                href={museum.sitio_web}
+                className="block overflow-hidden whitespace-normal"
+              >
+                {museum.sitio_web}
+              </Link>
             </div>
           </div>
 

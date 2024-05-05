@@ -89,13 +89,13 @@ const EventsPage = () => {
       ) : (
         <>
           {events.length > 0 ? (
-            <div className="flex gap-5">
+            <div className="flex justify-center gap-5 flex-wrap">
               {events.map((ev) => (
                 <Card
                   key={ev.id}
                   shadow="sm"
                   isPressable
-                  className="transition hover:scale-105"
+                  className="transition hover:scale-105 h-[300px] w-[300px]"
                 >
                   <Link href={`/admin/dashboard/events/update/${ev.id}`}>
                     <CardHeader className="flex flex-col font-bold text-lg text-center">

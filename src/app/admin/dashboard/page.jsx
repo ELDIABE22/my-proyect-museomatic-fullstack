@@ -23,7 +23,7 @@ const DashboardPage = () => {
 
   return (
     <DashboardLayout>
-      <div className="flex items-center justify-center">
+      <div className="flex flex-col gap-5 items-center justify-center">
         <h2 className="text-3xl">
           Bienvenido, <b>{session?.user?.nombre}</b>
         </h2>

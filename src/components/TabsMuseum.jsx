@@ -6,7 +6,6 @@ import CardEvent from "./CardEvent";
 
 const TabsMuseum = ({ events, collections }) => {
   console.log(events);
-  console.log(collections);
 
   return (
     <Tabs

@@ -19,7 +19,7 @@ const DashboardLayout = ({ children }) => {
   return (
     <section className="bg-black h-screen flex overflow-hidden">
       <NavbarDashboard />
-      <div className="bg-platinum flex-grow mt-2 mr-2 rounded-lg p-4 mb-0 overflow-auto">
+      <div className="bg-platinum flex-grow mt-2 mr-2 rounded-lg p-4 mb-0 overflow-auto z-10">
         {children}
       </div>
     </section>

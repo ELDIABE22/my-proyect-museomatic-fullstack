@@ -11,6 +11,7 @@ import { Button, Card, CardBody, CardHeader, Image } from "@nextui-org/react";
 
 const MuseumsPage = () => {
   const [museums, setMuseums] = useState([]);
+  const [museumsCity, setMuseumsCity] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const { data: session, status } = useSession();
@@ -29,7 +30,11 @@ const MuseumsPage = () => {
         return { ...museum, id: idString };
       });
 
+      // Set para que no se guarden ciudades iguales
+      const cities = [...new Set(updatedData.map((mu) => mu.ciudad))];
+
       setMuseums(updatedData);
+      setMuseumsCity(cities);
       setLoading(false);
     } catch (error) {
       console.error("Error al obtener los museos:", error);
@@ -68,29 +73,43 @@ const MuseumsPage = () => {
       ) : (
         <>
           {museums.length > 0 ? (
-            <div className="flex gap-5">
-              {museums.map((mu) => (
-                <Card
-                  key={mu.id}
-                  shadow="sm"
-                  isPressable
-                  className="transition hover:scale-105"
-                >
-                  <Link href={`/admin/dashboard/museums/update/${mu.id}`}>
-                    <CardHeader className="font-bold text-xl text-center">
-                      {mu.nombre}
-                    </CardHeader>
-                    <CardBody>
-                      <Image
-                        shadow="sm"
-                        radius="none"
-                        alt={mu.nombre}
-                        className="object-cover h-[200px] w-[300px]"
-                        src={mu.imagenURL}
-                      />
-                    </CardBody>
-                  </Link>
-                </Card>
+            <div className="flex flex-col gap-5">
+              {museumsCity.map((city, cityIndex) => (
+                <div key={cityIndex}>
+                  <h3 className="text-center font-bold text-3xl mb-3">
+                    {city}
+                  </h3>
+                  <div className="flex justify-center flex-wrap gap-5">
+                    {museums.map(
+                      (mu) =>
+                        mu.ciudad === city && (
+                          <Card
+                            key={mu.id}
+                            shadow="sm"
+                            isPressable
+                            className="transition hover:scale-105"
+                          >
+                            <Link
+                              href={`/admin/dashboard/museums/update/${mu.id}`}
+                            >
+                              <CardHeader className="font-bold text-xl text-center">
+                                {mu.nombre}
+                              </CardHeader>
+                              <CardBody>
+                                <Image
+                                  shadow="sm"
+                                  radius="none"
+                                  alt={mu.nombre}
+                                  className="object-cover h-[200px] w-[300px]"
+                                  src={mu.imagenURL}
+                                />
+                              </CardBody>
+                            </Link>
+                          </Card>
+                        )
+                    )}
+                  </div>
+                </div>
               ))}
             </div>
           ) : (

@@ -7,7 +7,7 @@ export async function GET(res, { params }) {
 
         const [getCollection] = await connection.query('SELECT c.* FROM Museo m INNER JOIN Coleccion c ON m.id = c.museo_id WHERE m.id = ?', [idBuffer]);
 
-        const [getEvents] = await connection.query('SELECT e.* FROM Museo m INNER JOIN Evento e ON m.id = e.museo_id WHERE m.id = ?', [idBuffer]);
+        const [getEvents] = await connection.query('SELECT e.* FROM Museo m INNER JOIN Evento e ON m.id = e.museo_id WHERE m.id = ? AND e.estado != "Finalizado" ', [idBuffer]);
 
         return NextResponse.json({
             dataCollection: getCollection,

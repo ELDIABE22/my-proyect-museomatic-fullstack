@@ -1,7 +1,7 @@
 "use client";
 
-import CardMuseums from "@/components/CardMuseums";
 import axios from "axios";
+import CardMuseums from "@/components/CardMuseums";
 import { useEffect, useState } from "react";
 
 const MuseumsPage = () => {
@@ -23,7 +23,8 @@ const MuseumsPage = () => {
         })
         .filter((muFilter) => muFilter.estado === "activo");
 
-      const cities = activeData.map((mu) => mu.ciudad);
+      // Set para que no se guarden ciudades iguales
+      const cities = [...new Set(activeData.map((mu) => mu.ciudad))];
 
       setMuseums(activeData);
       setMuseumsCity(cities);
@@ -40,7 +41,7 @@ const MuseumsPage = () => {
   return (
     <>
       {loading ? (
-        <p className="text-2xl font-bold text-center">Cargando...</p>
+        <p className="text-2xl font-bold text-center mt-4">Cargando...</p>
       ) : (
         <>
           {museums.length > 0 ? (
@@ -48,7 +49,7 @@ const MuseumsPage = () => {
               {museumsCity.map((city, cityIndex) => (
                 <div className="my-4 mx-3" key={cityIndex}>
                   <h3 className="text-center font-bold text-3xl">{city}</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 mt-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-2 md:gap-x-5 gap-y-8 mt-4">
                     {museums.map(
                       (mu) =>
                         mu.ciudad === city && (
@@ -60,7 +61,7 @@ const MuseumsPage = () => {
               ))}
             </div>
           ) : (
-            <p className="text-center text-3xl font-bold">
+            <p className="text-center text-2xl font-bold">
               No hay museos disponibles.
             </p>
           )}
