@@ -21,11 +21,12 @@ export async function POST(req) {
         const formattedEventDate = `${dataElemnet.eventDate.year}-${dataElemnet.eventDate.month.toString().padStart(2, '0')}-${dataElemnet.eventDate.day.toString().padStart(2, '0')}`;
 
         // Formatea el tiempo en el formato 'HH:MM'
-        const formattedEventTime = `${dataElemnet.eventTime.hour.toString().padStart(2, '0')}:${dataElemnet.eventTime.minute.toString().padStart(2, '0')}`;
+        const formattedEventTimeInit = `${dataElemnet.eventTimeInit.hour.toString().padStart(2, '0')}:${dataElemnet.eventTimeInit.minute.toString().padStart(2, '0')}`;
+        const formattedEventTimeFinally = `${dataElemnet.eventTimeFinally.hour.toString().padStart(2, '0')}:${dataElemnet.eventTimeFinally.minute.toString().padStart(2, '0')}`;
 
-        const values = [idMuseumBinary, dataElemnet.name, dataElemnet.description, formattedEventDate, formattedEventTime, dataElemnet.price, dataElemnet.typeEvent, dataElemnet.capacity, dataElemnet.imagenURL];
+        const values = [idMuseumBinary, dataElemnet.name, dataElemnet.description, formattedEventDate, formattedEventTimeInit, dataElemnet.price, dataElemnet.typeEvent, dataElemnet.capacity, dataElemnet.imagenURL, formattedEventTimeFinally];
 
-        await connection.query('INSERT INTO Evento (museo_id, nombre, descripcion, fecha, hora, precio, tipo_evento, capacidad, imagenURL) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', values);
+        await connection.query('INSERT INTO Evento (museo_id, nombre, descripcion, fecha, hora_inicio, precio, tipo_evento, capacidad, imagenURL, hora_fin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', values);
 
         return NextResponse.json({ message: "Evento creado" });
     } catch (error) {
@@ -77,14 +78,16 @@ export async function PUT(req) {
         const formattedEventDate = `${dataElemnet.eventDate.year}-${dataElemnet.eventDate.month.toString().padStart(2, '0')}-${dataElemnet.eventDate.day.toString().padStart(2, '0')}`;
 
         // Formatea el tiempo en el formato 'HH:MM'
-        const formattedEventTime = `${dataElemnet.eventTime.hour.toString().padStart(2, '0')}:${dataElemnet.eventTime.minute.toString().padStart(2, '0')}`;
+        const formattedEventTimeInit = `${dataElemnet.eventTimeInit.hour.toString().padStart(2, '0')}:${dataElemnet.eventTimeInit.minute.toString().padStart(2, '0')}`;
+        const formattedEventTimeFinally = `${dataElemnet.eventTimeFinally.hour.toString().padStart(2, '0')}:${dataElemnet.eventTimeFinally.minute.toString().padStart(2, '0')}`;
 
-        const values = [idMuseumBinary, dataElemnet.name, dataElemnet.description, formattedEventDate, formattedEventTime, dataElemnet.price, dataElemnet.typeEvent, dataElemnet.capacity, dataElemnet.state, dataElemnet.imagenURL, id];
+        const values = [idMuseumBinary, dataElemnet.name, dataElemnet.description, formattedEventDate, formattedEventTimeInit, dataElemnet.price, dataElemnet.typeEvent, dataElemnet.capacity, dataElemnet.state, dataElemnet.imagenURL, formattedEventTimeFinally, id];
 
-        await connection.query('UPDATE Evento SET museo_id = ?, nombre = ?, descripcion = ?, fecha = ?, hora = ?, precio = ?, tipo_evento = ?, capacidad = ?, estado = ?, imagenURL = ? WHERE id = UUID_TO_BIN(?)', values);
+        await connection.query('UPDATE Evento SET museo_id = ?, nombre = ?, descripcion = ?, fecha = ?, hora_inicio = ?, precio = ?, tipo_evento = ?, capacidad = ?, estado = ?, imagenURL = ?, hora_fin = ? WHERE id = UUID_TO_BIN(?)', values);
 
         return NextResponse.json({ message: "Evento actualizado" });
     } catch (error) {
+        console.log(error.message)
         return NextResponse.json({ message: "Error al actualizar el evento", error: error.message });
     }
 }

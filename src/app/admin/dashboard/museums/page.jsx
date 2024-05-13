@@ -95,7 +95,7 @@ const MuseumsPage = () => {
                               <CardHeader className="font-bold text-xl text-center">
                                 {mu.nombre}
                               </CardHeader>
-                              <CardBody>
+                              <CardBody className="relative">
                                 <Image
                                   shadow="sm"
                                   radius="none"
@@ -103,6 +103,19 @@ const MuseumsPage = () => {
                                   className="object-cover h-[200px] w-[300px]"
                                   src={mu.imagenURL}
                                 />
+                                <div className="absolute top-5 left-1 rounded-br-lg rounded-tr-lg bg-white p-2 z-10">
+                                  <p
+                                    className={
+                                      mu.estado === "activo"
+                                        ? "font-semibold text-green-500"
+                                        : "font-semibold text-red-500"
+                                    }
+                                  >
+                                    {mu.estado === "activo"
+                                      ? "Activo"
+                                      : "Inactivo"}
+                                  </p>
+                                </div>
                               </CardBody>
                             </Link>
                           </Card>

@@ -42,9 +42,29 @@ export const eventSchema = z.object({
     name: z.string().min(1, { message: { name: 'Es requerido' } }).max(50, { message: { name: "El nombre no puede tener más de 50 caracteres" } }).regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/, { message: { name: 'El nombre no es válido' } }),
     description: z.string().min(1, { message: { description: 'Es requerido' } }),
     eventDate: z.string().min(1, { message: { eventDate: 'Es requerido' } }),
-    eventTime: z.string().min(1, { message: { eventTime: 'Es requerido' } }),
+    eventTimeInit: z.string().min(1, { message: { eventTimeInit: 'Es requerido' } }),
+    eventTimeFinally: z.string().min(1, { message: { eventTimeFinally: 'Es requerido' } }),
     price: z.string().min(1, { message: { price: 'Es requerido' } }),
     typeEvent: z.string().min(1, { message: { typeEvent: 'Es requerido' } }),
     capacity: z.string().min(1, { message: { capacity: 'Es requerido' } }),
     state: z.string().min(1, { message: { state: 'Es requerido' } }).optional(),
+});
+
+export const updateUserSchema = z.object({
+    name: z.string().min(1, { message: { name: 'Es requerido' } }).max(50, { message: { name: "El nombre no puede tener más de 50 caracteres" } }).regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/, { message: { name: 'El nombre no es válido' } }),
+    phone: z.string().min(1, { message: { phone: 'Es requerido' } })
+        .refine((value) => value === '' || /^\d{10}$/.test(value), {
+            message: { phone: 'Debe tener exactamente 10 dígitos' }
+        })
+        .refine((value) => value === '' || /^[0-9]+$/.test(value), {
+            message: { phone: 'No debe contener letras' }
+        }),
+});
+
+export const ticketSchema = z.object({
+    ticketAmount: z.string().min(1, { message: { ticketAmount: 'Es requerido' } }).max(10, { message: { ticketAmount: 'Máximo 10' } })
+        .refine((value) => value === '' || /^[0-9]+$/.test(value), {
+            message: { ticketAmount: 'No debe contener letras' }
+        }).optional(),
+    name: z.string().min(1, { message: { name: 'Es requerido' } }).max(50, { message: { name: "El nombre no puede tener más de 50 caracteres" } }).regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/, { message: { name: 'El nombre no es válido' } }).optional(),
 });

@@ -26,12 +26,14 @@ const CardEvent = ({ events }) => {
             <div className="absolute top-0 left-0 right-0 bg-white p-2 z-10">
               <p
                 className={
-                  events.estado === "Pendiente"
+                  events.estado_evento === "Pendiente"
                     ? "font-semibold text-black"
                     : "font-semibold text-green-500"
                 }
               >
-                {events.estado === "Pendiente" ? events.fecha : events.estado}
+                {events.estado_evento === "Pendiente"
+                  ? events.fecha
+                  : events.estado_evento}
               </p>
             </div>
           </div>

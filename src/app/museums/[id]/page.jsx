@@ -58,9 +58,16 @@ const MuseumPage = ({ params }) => {
 
         // Formatea las fechas y horas
         const fecha = formatearFecha(ev.fecha);
-        const hora = formatearHora(ev.hora);
+        const horaInit = formatearHora(ev.hora_inicio);
+        const horaFinally = formatearHora(ev.hora_fin);
 
-        return { ...ev, id: idString, fecha, hora };
+        return {
+          ...ev,
+          id: idString,
+          fecha,
+          hora_inicio: horaInit,
+          hora_fin: horaFinally,
+        };
       });
 
       setCollections(collections);

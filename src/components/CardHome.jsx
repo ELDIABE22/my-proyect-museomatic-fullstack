@@ -1,37 +1,35 @@
-import { Button } from "@nextui-org/react";
 import Image from "next/image";
+import { Button } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
-const CardHome = ({ scrollReveal }) => {
+const CardHome = ({ museum }) => {
+  const router = useRouter();
+
   return (
-    <div className={scrollReveal}>
-      <div className="h-[600x] bg-white shadow-2xl shadow-black">
-        <Image
-          alt="destination-1"
-          className="w-full"
-          width={500}
-          height={300}
-          src="/destination-1.jpg"
-        />
-        <div className="p-4">
-          <h4 className="mb-2 text-lg font-semibold text-black">
-            Museo del Oro
-          </h4>
-          <p className="mb-4 text-sm leading-6 text-gray">
-            El Museo del Oro es uno de los museos más importantes de América
-            Latina y el mundo, dedicado a la historia y cultura de la
-            civilización Muisca. El museo alberga una de las colecciones más
-            grandes y valiosas de arte precolombino, incluyendo oro, cerámica,
-            textiles y objetos de oro.
-          </p>
-          <Button
-            color="default"
-            radius="none"
-            variant="shadow"
-            className="font-medium"
-          >
-            Ver
-          </Button>
-        </div>
+    <div className="flex flex-col justify-between bg-white shadow-2xl shadow-black">
+      <Image
+        alt={museum.nombre}
+        className="w-full min-h-[300px] object-cover"
+        width={500}
+        height={300}
+        src={museum.imagenURL}
+      />
+      <div className="h-full flex flex-col justify-between p-4">
+        <h4 className="mb-2 text-lg font-semibold text-black">
+          {museum.nombre}
+        </h4>
+        <p className="mb-4 text-sm leading-6 text-gray">
+          {museum.descripcion.substring(0, 200)}...
+        </p>
+        <Button
+          color="default"
+          radius="none"
+          variant="shadow"
+          className="font-medium"
+          onPress={() => router.push(`/museums/${museum.id}`)}
+        >
+          Ver
+        </Button>
       </div>
     </div>
   );

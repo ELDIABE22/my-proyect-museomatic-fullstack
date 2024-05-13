@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import {
   Modal,
   ModalContent,
@@ -12,14 +13,20 @@ import {
 } from "@nextui-org/react";
 
 const ModalEvent = ({ isOpen, onOpenChange, events, setOpenModalEvent }) => {
-  const handlePayTicket = async () => {
-    try {
-      const ticketData = {
-        evento_id: events.id,
-        precio: events.precio,
-      };
+  const router = useRouter();
 
-      const res = await axios.post("/api/create-payment-intent", ticketData);
+  const handlePayTicket = async () => {
+    alert("Creando pasarela de pago...");
+
+    try {
+      const res = await axios.get(`/api/ticket/${events.id}`);
+      const { message } = res.data;
+
+      if (message === "Disponible") {
+        router.push(`/ticket/payment/${events.id}`);
+      } else {
+        alert(message);
+      }
     } catch (error) {
       console.log("Error, intenta más tarde: ", error.message);
     }
@@ -78,20 +85,33 @@ const ModalEvent = ({ isOpen, onOpenChange, events, setOpenModalEvent }) => {
                 <p className="font-bold text-lg">Tipo de evento</p>
                 <span>{events.tipo_evento}</span>
               </div>
-              <div className="flex flex-col gap-3 sm:gap-0 sm:flex-row justify-between">
+              <div>
                 <div>
                   <p className="font-bold text-lg">Fecha del evento</p>
                   <span>{events.fecha}</span>
                 </div>
+              </div>
+              <div className="flex flex-col gap-3 sm:gap-0 sm:flex-row justify-between">
                 <div>
-                  <p className="font-bold text-lg">Hora del evento</p>
-                  <span>{events.hora}</span>
+                  <p className="font-bold text-lg">Hora Inicio</p>
+                  <span>{events.hora_inicio}</span>
+                </div>
+                <div>
+                  <p className="font-bold text-lg">Hora Fin</p>
+                  <span>{events.hora_fin}</span>
                 </div>
               </div>
               <div>
                 <p className="font-bold text-lg">Boletería</p>
-                <Chip color="success" variant="dot">
-                  Disponible
+                <Chip
+                  color={
+                    events.estado_tickets === "Disponible"
+                      ? "success"
+                      : "danger"
+                  }
+                  variant="dot"
+                >
+                  {events.estado_tickets}
                 </Chip>
               </div>
               <div>
@@ -104,13 +124,15 @@ const ModalEvent = ({ isOpen, onOpenChange, events, setOpenModalEvent }) => {
               <Button color="danger" variant="light" onPress={onClose}>
                 Cerrar
               </Button>
-              <Button
-                // onPress={handlePayTicket}
-                color="success"
-                variant="shadow"
-              >
-                Comprar
-              </Button>
+              {events.estado_tickets === "Disponible" && (
+                <Button
+                  onPress={handlePayTicket}
+                  color="success"
+                  variant="shadow"
+                >
+                  Comprar
+                </Button>
+              )}
             </ModalFooter>
           </>
         )}

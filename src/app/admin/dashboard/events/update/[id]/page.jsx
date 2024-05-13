@@ -29,7 +29,8 @@ const UpdateEventsPage = ({ params }) => {
   const [typeEvent, setTypeEvent] = useState("");
   const [state, setState] = useState("");
   const [eventDate, setEventDate] = useState(null);
-  const [eventTime, setEventTime] = useState(null);
+  const [eventTimeInit, setEventTimeInit] = useState(null);
+  const [eventTimeFinally, setEventTimeFinally] = useState(null);
   const [itemImage, setItemImage] = useState({ file: null });
 
   const [loading, setLoading] = useState(true);
@@ -80,13 +81,15 @@ const UpdateEventsPage = ({ params }) => {
       // Formatea la fecha en el formato "YYYY-MM-DD"
       const fechaFormateada = fecha.toISOString().split("T")[0];
 
-      const [hours, minutes] = event.hora.split(":");
+      const [hoursInit, minutesInit] = event.hora_inicio.split(":");
+      const [hoursFinally, minutesFinally] = event.hora_fin.split(":");
 
       setIdMuseum(idString);
       setName(event.nombre);
       setDescription(event.descripcion);
       setEventDate(parseDate(fechaFormateada));
-      setEventTime(new Time(hours, minutes));
+      setEventTimeInit(new Time(hoursInit, minutesInit));
+      setEventTimeFinally(new Time(hoursFinally, minutesFinally));
       setPrice(event.precio);
       setTypeEvent(event.tipo_evento);
       setCapacity(event.capacidad.toString());
@@ -112,7 +115,8 @@ const UpdateEventsPage = ({ params }) => {
         name,
         description,
         eventDate: eventDate ? "Fecha" : "",
-        eventTime: eventTime ? "Time" : "",
+        eventTimeInit: eventTimeInit ? "Time" : "",
+        eventTimeFinally: eventTimeFinally ? "Time" : "",
         price,
         typeEvent,
         capacity,
@@ -143,8 +147,9 @@ const UpdateEventsPage = ({ params }) => {
           capacity,
           typeEvent,
           eventDate,
-          eventTime,
+          eventTimeInit,
           state,
+          eventTimeFinally,
         })
       );
 
@@ -281,23 +286,30 @@ const UpdateEventsPage = ({ params }) => {
                     <AutocompleteItem key={estado}>{estado}</AutocompleteItem>
                   ))}
               </Autocomplete>
+              <DateInput
+                isDisabled={updateEvent || deleteEvent}
+                label={"Fecha del evento"}
+                value={eventDate}
+                onChange={setEventDate}
+                isInvalid={error?.some((error) => error.eventDate)}
+                errorMessage={
+                  error?.find((error) => error.eventDate)?.eventDate
+                }
+              />
               <div className="flex gap-5">
-                <DateInput
+                <TimeInput
                   isDisabled={updateEvent || deleteEvent}
-                  label={"Fecha del evento"}
-                  value={eventDate}
-                  onChange={setEventDate}
-                  isInvalid={error?.some((error) => error.eventDate)}
-                  errorMessage={
-                    error?.find((error) => error.eventDate)?.eventDate
-                  }
+                  label="Hora inicio"
+                  value={eventTimeInit}
+                  onChange={setEventTimeInit}
+                  isRequired={error?.some((error) => error.eventTimeInit)}
                 />
                 <TimeInput
                   isDisabled={updateEvent || deleteEvent}
-                  label="Hora del evento"
-                  value={eventTime}
-                  onChange={setEventTime}
-                  isRequired={error?.some((error) => error.eventTime)}
+                  label="Hora fin"
+                  value={eventTimeFinally}
+                  onChange={setEventTimeFinally}
+                  isRequired={error?.some((error) => error.eventTimeFinally)}
                 />
               </div>
               <div className="flex gap-5">
@@ -389,7 +401,7 @@ const UpdateEventsPage = ({ params }) => {
                 className="w-full bg-black"
               >
                 <p className="text-white font-semibold text-lg w-full tracking-widest hover:scale-110 transform transition-transform duration-[0.2s] ease-in-out">
-                  {updateEvent ? "Creando..." : "Crear"}
+                  {updateEvent ? "Actualizando..." : "Actualizar"}
                 </p>
               </Button>
               <Button

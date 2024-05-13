@@ -27,7 +27,8 @@ const NewEventsPage = () => {
   const [idMuseum, setIdMuseum] = useState("");
   const [typeEvent, setTypeEvent] = useState("");
   const [eventDate, setEventDate] = useState(null);
-  const [eventTime, setEventTime] = useState(null);
+  const [eventTimeInit, setEventTimeInit] = useState(null);
+  const [eventTimeFinally, setEventTimeFinally] = useState(null);
   const [itemImage, setItemImage] = useState({ file: null });
   const [loading, setLoading] = useState(true);
   const [creatingEvent, setCreatingEvent] = useState(false);
@@ -76,7 +77,8 @@ const NewEventsPage = () => {
         name,
         description,
         eventDate: eventDate ? "Fecha" : "",
-        eventTime: eventTime ? "Time" : "",
+        eventTimeInit: eventTimeInit ? "Time" : "",
+        eventTimeFinally: eventTimeFinally ? "Time" : "",
         price,
         typeEvent,
         capacity,
@@ -98,7 +100,8 @@ const NewEventsPage = () => {
           capacity,
           typeEvent,
           eventDate,
-          eventTime,
+          eventTimeInit,
+          eventTimeFinally,
         })
       );
 
@@ -205,23 +208,30 @@ const NewEventsPage = () => {
                     <AutocompleteItem key={estado}>{estado}</AutocompleteItem>
                   ))}
               </Autocomplete>
+              <DateInput
+                isDisabled={creatingEvent}
+                label={"Fecha del evento"}
+                value={eventDate}
+                onChange={setEventDate}
+                isInvalid={error?.some((error) => error.eventDate)}
+                errorMessage={
+                  error?.find((error) => error.eventDate)?.eventDate
+                }
+              />
               <div className="flex gap-5">
-                <DateInput
+                <TimeInput
                   isDisabled={creatingEvent}
-                  label={"Fecha del evento"}
-                  value={eventDate}
-                  onChange={setEventDate}
-                  isInvalid={error?.some((error) => error.eventDate)}
-                  errorMessage={
-                    error?.find((error) => error.eventDate)?.eventDate
-                  }
+                  label="Hora inicio"
+                  value={eventTimeInit}
+                  onChange={setEventTimeInit}
+                  isRequired={error?.some((error) => error.eventTimeInit)}
                 />
                 <TimeInput
                   isDisabled={creatingEvent}
-                  label="Hora del evento"
-                  value={eventTime}
-                  onChange={setEventTime}
-                  isRequired={error?.some((error) => error.eventTime)}
+                  label="Hora fin"
+                  value={eventTimeFinally}
+                  onChange={setEventTimeFinally}
+                  isRequired={error?.some((error) => error.eventTimeFinally)}
                 />
               </div>
               <div className="flex gap-5">

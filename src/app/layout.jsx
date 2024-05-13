@@ -1,6 +1,8 @@
-import { NextProviderUI } from "@/context/NextUIProvider";
 import "./globals.css";
+
 import NextAuthProviders from "@/context/NextAuthProviders";
+import { NextProviderUI } from "@/context/NextUIProvider";
+import { MuseumProvider } from "@/context/MuseumContext";
 
 export const metadata = {
   title: "MuseoMatic",
@@ -11,9 +13,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <NextProviderUI>
-          <NextAuthProviders>{children}</NextAuthProviders>
-        </NextProviderUI>
+        <MuseumProvider>
+          <NextProviderUI>
+            <NextAuthProviders>{children}</NextAuthProviders>
+          </NextProviderUI>
+        </MuseumProvider>
       </body>
     </html>
   );
