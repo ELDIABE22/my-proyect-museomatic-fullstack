@@ -30,7 +30,8 @@ const ModalAdminUser = ({
   const [updateUser, setUpdateUser] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (e) => {
+    e.preventDefault();
     setUpdateUser(true);
 
     try {
@@ -88,18 +89,20 @@ const ModalAdminUser = ({
       <ModalContent>
         {(onClose) => (
           <>
-            <ModalHeader className="flex flex-col gap-1">
-              Información Usuario
-              {session?.user.usuario_admin === 1 && (
-                <p className="text-md">
-                  ID:{" "}
-                  <span className="text-small text-default-500">{user.id}</span>
-                </p>
-              )}
-            </ModalHeader>
-            <Divider />
-            <ModalBody>
-              <form className="flex flex-col gap-4">
+            <form onSubmit={handleUpdate} className="flex flex-col gap-4">
+              <ModalHeader className="flex flex-col gap-1">
+                Información Usuario
+                {session?.user.usuario_admin === 1 && (
+                  <p className="text-md">
+                    ID:{" "}
+                    <span className="text-small text-default-500">
+                      {user.id}
+                    </span>
+                  </p>
+                )}
+              </ModalHeader>
+              <Divider />
+              <ModalBody>
                 <Input
                   isDisabled={updateUser}
                   isClearable
@@ -148,27 +151,23 @@ const ModalAdminUser = ({
                     </p>
                   </div>
                 )}
-              </form>
-            </ModalBody>
-            <Divider />
-            <ModalFooter>
-              <Button
-                color="danger"
-                isDisabled={updateUser}
-                variant="light"
-                onPress={onClose}
-              >
-                Cerrar
-              </Button>
-              <Button
-                type="submit"
-                isLoading={updateUser}
-                onPress={handleUpdate}
-                color="success"
-              >
-                Actualizar
-              </Button>
-            </ModalFooter>
+              </ModalBody>
+              <Divider />
+              <ModalFooter>
+                <Button
+                  type="buttom"
+                  color="danger"
+                  isDisabled={updateUser}
+                  variant="light"
+                  onPress={onClose}
+                >
+                  Cerrar
+                </Button>
+                <Button type="submit" isLoading={updateUser} color="success">
+                  Actualizar
+                </Button>
+              </ModalFooter>
+            </form>
           </>
         )}
       </ModalContent>

@@ -26,7 +26,8 @@ const ModalUser = ({
   const [updateUser, setUpdateUser] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (e) => {
+    e.preventDefault();
     setUpdateUser(true);
 
     try {
@@ -83,10 +84,10 @@ const ModalUser = ({
       <ModalContent>
         {(onClose) => (
           <>
-            <ModalHeader>Perfil</ModalHeader>
-            <Divider />
-            <ModalBody>
-              <form className="flex flex-col gap-4">
+            <form onSubmit={handleUpdate} className="flex flex-col gap-4">
+              <ModalHeader>Perfil</ModalHeader>
+              <Divider />
+              <ModalBody>
                 <Input
                   isDisabled={updateUser}
                   isClearable
@@ -116,27 +117,23 @@ const ModalUser = ({
                   isInvalid={error?.some((error) => error.phone)}
                   errorMessage={error?.find((error) => error.phone)?.phone}
                 />
-              </form>
-            </ModalBody>
-            <Divider />
-            <ModalFooter>
-              <Button
-                color="danger"
-                isDisabled={updateUser}
-                variant="light"
-                onPress={onClose}
-              >
-                Cerrar
-              </Button>
-              <Button
-                isLoading={updateUser}
-                type="submit"
-                onPress={handleUpdate}
-                color="success"
-              >
-                Actualizar
-              </Button>
-            </ModalFooter>
+              </ModalBody>
+              <Divider />
+              <ModalFooter>
+                <Button
+                  color="danger"
+                  type="button"
+                  isDisabled={updateUser}
+                  variant="light"
+                  onPress={onClose}
+                >
+                  Cerrar
+                </Button>
+                <Button isLoading={updateUser} type="submit" color="success">
+                  Actualizar
+                </Button>
+              </ModalFooter>
+            </form>
           </>
         )}
       </ModalContent>
