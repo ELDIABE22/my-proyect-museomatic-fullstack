@@ -62,9 +62,29 @@ export const updateUserSchema = z.object({
 });
 
 export const ticketSchema = z.object({
-    ticketAmount: z.string().min(1, { message: { ticketAmount: 'Es requerido' } }).max(10, { message: { ticketAmount: 'Máximo 10' } })
+    ticketAmount: z.string().min(1, { message: { ticketAmount: 'Es requerido' } })
         .refine((value) => value === '' || /^[0-9]+$/.test(value), {
             message: { ticketAmount: 'No debe contener letras' }
+        }).refine((value) => value >= 1, {
+            message: { ticketAmount: 'Mínimo 1 tickets' }
+        }).refine((value) => value <= 10, {
+            message: { ticketAmount: 'Máximo 10 tickets' }
         }).optional(),
     name: z.string().min(1, { message: { name: 'Es requerido' } }).max(50, { message: { name: "El nombre no puede tener más de 50 caracteres" } }).regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/, { message: { name: 'El nombre no es válido' } }).optional(),
+    cardNumber: z.string().min(1, { message: { cardNumber: 'Es requerido' } }).refine((value) => value.length === 19, {
+        message: { cardNumber: 'Debe tener exactamente 19 caracteres' }
+    }).optional(),
+    dateExpiry: z.string().min(1).refine((value) => /^\d{2}\/\d{2}$/.test(value), {
+        message: { dateExpiry: 'MM/AA' }
+    }).optional(),
+    cvv: z.string().min(1, { message: { cvv: 'Es requerido' } }).optional(),
 });
+
+export const correoForgotPasswordSchema = z.object({
+    email: z.string().min(1, { message: { email: 'Es requerido' } }).email({ message: { email: 'El correo no es válido' } }),
+});
+
+export const resetPasswordSchema = z.object({
+    newPassword: z.string().min(1, { message: { newPassword: 'Es requerido' } }).min(6, { message: { newPassword: 'La contraseña debe tener al menos 6 caracteres' } }).max(15, { message: { newPassword: 'La contraseña no puede tener más de 15 caracteres' } }),
+    confirmNewPassword: z.string().min(1, { message: { confirmNewPassword: 'Es requerido' } }).min(6, { message: { confirmNewPassword: 'La contraseña debe tener al menos 6 caracteres' } }).max(15, { message: { confirmNewPassword: 'La contraseña no puede tener más de 15 caracteres' } }),
+})

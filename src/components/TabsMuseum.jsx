@@ -5,8 +5,6 @@ import CardCollection from "./CardCollection";
 import CardEvent from "./CardEvent";
 
 const TabsMuseum = ({ events, collections }) => {
-  console.log(events);
-
   return (
     <Tabs
       aria-label="Options"

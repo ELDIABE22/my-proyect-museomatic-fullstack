@@ -55,9 +55,27 @@ export async function POST(req) {
 
         const values = [idUserBinary, idEventBinary, total, cantidad_tickets];
 
-        await connection.query('INSERT INTO Ticket (user_id, evento_id, total, cantidad_tickets) VALUES (?,?,?,?)', values);
+        const [result] = await connection.query('INSERT INTO Ticket (user_id, evento_id, total, cantidad_tickets) VALUES (?,?,?,?)', values);
 
-        return NextResponse.json({ message: 'Compra realizada' });
+        const insertedId = result.insertId;
+
+        const [createTicket] = await connection.execute('SELECT * FROM Ticket WHERE numero_tickets = ?', [insertedId]);
+
+        const filterData = createTicket.map(ti => {
+            const idStringUser = ti.user_id.toString('hex');
+            const idStringSessionUser = idUserBinary.toString('hex');
+
+            const idStringTicket = ti.numero_tickets.toString('hex');
+
+            const date = new Date(ti.fecha_compra);
+
+            if (date >= new Date() && idStringUser === idStringSessionUser) {
+                return idStringTicket;
+            }
+            return null;
+        }).filter(id => id !== null);
+
+        return NextResponse.json({ message: 'Compra realizada', idTicket: filterData[0] });
     } catch (error) {
         console.log(error.message)
         return NextResponse.json({ message: "Error al crear el metodo de pago: " + error.message });

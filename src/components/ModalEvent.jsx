@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import {
   Modal,
   ModalContent,
@@ -11,15 +12,27 @@ import {
   Divider,
   Chip,
 } from "@nextui-org/react";
+import { useState } from "react";
 
 const ModalEvent = ({ isOpen, onOpenChange, events, setOpenModalEvent }) => {
+  const [creatingPayment, setCreatingPayment] = useState(false);
+
+  const { status } = useSession();
+
   const router = useRouter();
 
   const handlePayTicket = async () => {
+    setCreatingPayment(true);
     alert("Creando pasarela de pago...");
 
+    if (status !== "authenticated") {
+      setCreatingPayment(false);
+      alert("Registrate o inicia sesión para comprar");
+      return;
+    }
+
     try {
-      const res = await axios.get(`/api/ticket/${events.id}`);
+      const res = await axios.get(`/api/create-payment-intent/${events.id}`);
       const { message } = res.data;
 
       if (message === "Disponible") {
@@ -27,8 +40,11 @@ const ModalEvent = ({ isOpen, onOpenChange, events, setOpenModalEvent }) => {
       } else {
         alert(message);
       }
+
+      setCreatingPayment(false);
     } catch (error) {
       console.log("Error, intenta más tarde: ", error.message);
+      setCreatingPayment(false);
     }
   };
 
@@ -126,6 +142,7 @@ const ModalEvent = ({ isOpen, onOpenChange, events, setOpenModalEvent }) => {
               </Button>
               {events.estado_tickets === "Disponible" && (
                 <Button
+                  isLoading={creatingPayment}
                   onPress={handlePayTicket}
                   color="success"
                   variant="shadow"

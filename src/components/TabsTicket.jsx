@@ -42,17 +42,27 @@ const TabsTicket = ({ params, ticketTotal }) => {
     e.preventDefault();
 
     try {
+      ticketSchema.parse({
+        name,
+        cardNumber,
+        dateExpiry,
+        cvv,
+      });
+
+      setError(null);
+
       const res = await axios.post("/api/create-payment-intent", {
         evento_id: params.id,
         total: ticketTotal * ticketAmount,
         cantidad_tickets: parseInt(ticketAmount),
       });
 
-      const { message } = res.data;
+      const { message, idTicket } = res.data;
 
       switch (message) {
         case "Compra realizada":
-          alert(message);
+          alert("Redireccionando...");
+          router.push(`/ticket/${idTicket}/receipt`);
           break;
         case "Tickets agotados":
           alert(message);
@@ -66,39 +76,58 @@ const TabsTicket = ({ params, ticketTotal }) => {
       setUserLoginLoading(false);
     } catch (error) {
       console.log(error.message);
+      const errors = error?.errors?.map((error) => error.message);
+      setError(errors);
       setUserLoginLoading(false);
     }
   };
 
+  const handleInputChangeCardNumber = (value) => {
+    // Remover cualquier carácter que no sea un número
+    const formattedValue = value.replace(/\D/g, "");
+
+    // Insertar espacios cada cuatro dígitos
+    setCardNumber(
+      formattedValue
+        .replace(/(\d{4})/g, "$1 ")
+        .trim()
+        .substr(0, 19)
+    );
+  };
+
   const confirmTicketAmount = () => {
-    try {
-      ticketSchema.parse({
-        ticketAmount,
-      });
+    if (!verifyingPayment) {
+      try {
+        ticketSchema.parse({
+          ticketAmount,
+        });
 
-      setError(null);
+        setError(null);
 
-      setName(session?.user.nombre);
+        setName(session?.user.nombre);
 
-      setConfirmTicket(!confirmTicket);
-    } catch (error) {
-      const errors = error?.errors?.map((error) => error.message);
-      setError(errors);
+        setConfirmTicket(!confirmTicket);
+      } catch (error) {
+        const errors = error?.errors?.map((error) => error.message);
+        setError(errors);
+      }
     }
   };
 
   const confirmUser = () => {
-    try {
-      ticketSchema.parse({
-        name,
-      });
+    if (!verifyingPayment) {
+      try {
+        ticketSchema.parse({
+          name,
+        });
 
-      setError(null);
+        setError(null);
 
-      setConfirmName(!confirmName);
-    } catch (error) {
-      const errors = error?.errors?.map((error) => error.message);
-      setError(errors);
+        setConfirmName(!confirmName);
+      } catch (error) {
+        const errors = error?.errors?.map((error) => error.message);
+        setError(errors);
+      }
     }
   };
 
@@ -177,7 +206,12 @@ const TabsTicket = ({ params, ticketTotal }) => {
           </CardBody>
           <Divider />
           <CardFooter>
-            <Button onPress={confirmUser} variant="shadow">
+            <Button
+              onPress={confirmUser}
+              radius="none"
+              variant="shadow"
+              className="w-full"
+            >
               Confirmar
             </Button>
           </CardFooter>
@@ -223,6 +257,8 @@ const TabsTicket = ({ params, ticketTotal }) => {
                   placeholder="Introduce tu nombre completo"
                   value={name}
                   onValueChange={setName}
+                  isInvalid={error?.some((error) => error.name)}
+                  errorMessage={error?.find((error) => error.name)?.name}
                 />
               </div>
               <div className="w-full h-auto flex flex-col gap-1">
@@ -232,11 +268,13 @@ const TabsTicket = ({ params, ticketTotal }) => {
                   label="Número de tarjeta"
                   labelPlacement="outside"
                   autoComplete="off"
-                  type="number"
+                  type="text"
+                  maxLength={19}
                   variant="bordered"
                   placeholder="0000 0000 0000 0000"
                   value={cardNumber}
-                  onValueChange={setCardNumber}
+                  onValueChange={handleInputChangeCardNumber}
+                  isInvalid={error?.some((error) => error.cardNumber)}
                 />
               </div>
               <div className="w-full h-auto flex flex-col gap-1">
@@ -248,10 +286,15 @@ const TabsTicket = ({ params, ticketTotal }) => {
                     labelPlacement="outside"
                     autoComplete="off"
                     type="text"
+                    maxLength={5}
                     variant="bordered"
-                    placeholder="01/23"
+                    placeholder="MM/AA"
                     value={dateExpiry}
                     onValueChange={setDateExpiry}
+                    isInvalid={error?.some((error) => error.dateExpiry)}
+                    errorMessage={
+                      error?.find((error) => error.dateExpiry)?.dateExpiry
+                    }
                   />
                   <Input
                     isDisabled={verifyingPayment}
@@ -259,12 +302,14 @@ const TabsTicket = ({ params, ticketTotal }) => {
                     label="CVV"
                     labelPlacement="outside"
                     autoComplete="off"
-                    type="number"
+                    type="text"
+                    maxLength={3}
                     variant="bordered"
                     placeholder="CVV"
                     max={16}
                     value={cvv}
                     onValueChange={setCvv}
+                    isInvalid={error?.some((error) => error.cvv)}
                   />
                 </div>
               </div>

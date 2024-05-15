@@ -10,7 +10,7 @@ const TicketPaymentPage = ({ params }) => {
 
   const getTicket = async () => {
     try {
-      const res = await axios.get(`/api/ticket/${params.id}`);
+      const res = await axios.get(`/api/create-payment-intent/${params.id}`);
       const { ticket } = res.data;
 
       setTicketTotal(parseFloat(ticket.PrecioDelEvento));

@@ -1,43 +1,40 @@
 import { connection } from "@/utils/museodb";
+import { authOptions } from "../../auth/[...nextauth]/route";
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
 
 export async function GET(res, { params }) {
     try {
-        const [eventStatus] = await connection.query(`
+        const { user } = await getServerSession(authOptions);
+
+        const idUserBinary = Buffer.from(user.id.data, 'hex');
+
+        const [result] = await connection.query(`
             SELECT 
-                CASE 
-                    WHEN e.fecha > CURDATE() THEN 'pendiente'
-                    WHEN e.fecha = CURDATE() AND e.hora_inicio <= TIME(NOW()) AND e.hora_fin > TIME(NOW()) THEN 'en curso'
-                    ELSE 'finalizado'
-                END AS estado_evento
-            FROM Evento e
-            WHERE e.estado != "Finalizado" AND e.id = UUID_TO_BIN(?)
-        `, [params.id]);
+                Ticket.numero_tickets, 
+                Ticket.cantidad_tickets, 
+                Ticket.total, 
+                Ticket.fecha_compra, 
+                Usuario.nombre AS nombre_usuario, 
+                Evento.nombre AS nombre_evento
+            FROM 
+                Ticket
+            JOIN 
+                Usuario ON Ticket.user_id = Usuario.id
+            JOIN 
+                Evento ON Ticket.evento_id = Evento.id
+            WHERE 
+                Ticket.numero_tickets = UUID_TO_BIN(?)
+                AND Usuario.id = ?
+        `, [params.id, idUserBinary]);
 
-        if (eventStatus[0].estado_evento !== "pendiente") {
-            return NextResponse.json({ message: `Evento ${eventStatus[0].estado_evento}` });
+        if (result === null || result.length === 0) {
+            return NextResponse.json({ message: 'Petición denegada' });
         }
 
-        const [ticketAvailable] = await connection.query(`
-            SELECT E.capacidad AS CapacidadDelEvento,
-            E.precio AS PrecioDelEvento, 
-            SUM(T.cantidad_tickets) AS NumeroDeTicketsVendidos
-            FROM Ticket T
-            INNER JOIN 
-            Evento E ON T.evento_id = E.id
-            WHERE T.evento_id = UUID_TO_BIN(?)
-            GROUP BY E.id
-        `, [params.id]);
-
-        if (eventStatus[0].estado_evento === "pendiente" && ticketAvailable.length > 0) {
-            if (ticketAvailable[0].CapacidadDelEvento <= ticketAvailable[0].NumeroDeTicketsVendidos) {
-                return NextResponse.json({ message: 'Agotado', ticket: ticketAvailable[0] });
-            }
-        }
-
-        return NextResponse.json({ message: 'Disponible', ticket: ticketAvailable[0] });
+        return NextResponse.json({ message: 'Petición autorizada', infoTicket: result[0] });
     } catch (error) {
         console.log(error.message);
-        return NextResponse.json({ message: `Error al consultar el evento con ID: ${params.id}`, error: error.message });
+        return NextResponse.json({ message: `Error al consultar el ticket con ID: ${params.id}`, error: error.message });
     }
 }
