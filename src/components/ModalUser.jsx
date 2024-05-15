@@ -42,7 +42,6 @@ const ModalUser = ({
         id: dataUser.id,
         name,
         phone,
-        admin: null,
       });
 
       const { message } = res.data;
