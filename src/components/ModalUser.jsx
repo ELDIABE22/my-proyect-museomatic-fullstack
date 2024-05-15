@@ -41,6 +41,7 @@ const ModalUser = ({
         id: dataUser.id,
         name,
         phone,
+        admin: null,
       });
 
       const { message } = res.data;
@@ -128,8 +129,8 @@ const ModalUser = ({
                 Cerrar
               </Button>
               <Button
+                isLoading={updateUser}
                 type="submit"
-                isDisabled={updateUser}
                 onPress={handleUpdate}
                 color="success"
               >

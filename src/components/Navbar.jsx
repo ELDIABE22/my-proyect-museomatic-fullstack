@@ -35,6 +35,8 @@ const Navbar = ({ openModal, setOpenModal, user, loading, getUser }) => {
 
   const router = useRouter();
 
+  const uniqueCities = [...new Set(museums.map((mu) => mu.ciudad))];
+
   // useCallback para manejar el cambio en el valor de búsqueda, actualizando el valor del filtro.
   const onSearchChange = useCallback((value) => {
     if (value) {
@@ -154,9 +156,9 @@ const Navbar = ({ openModal, setOpenModal, user, loading, getUser }) => {
               selectedKeys={statusFilterCity}
               onSelectionChange={setStatusFilterCity}
             >
-              {museums.map((mu) => (
-                <DropdownItem key={mu.ciudad} className="capitalize">
-                  {mu.ciudad}
+              {uniqueCities.map((city) => (
+                <DropdownItem key={city} className="capitalize">
+                  {city}
                 </DropdownItem>
               ))}
             </DropdownMenu>

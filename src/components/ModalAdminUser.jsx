@@ -162,7 +162,7 @@ const ModalAdminUser = ({
               </Button>
               <Button
                 type="submit"
-                isDisabled={updateUser}
+                isLoading={updateUser}
                 onPress={handleUpdate}
                 color="success"
               >

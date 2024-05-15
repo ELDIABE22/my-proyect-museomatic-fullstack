@@ -14,8 +14,9 @@ export async function GET() {
 export async function PUT(req) {
     try {
         const { id, name, phone, admin } = await req.json();
+        console.log(admin)
 
-        if (admin !== undefined) {
+        if (admin !== null) {
             const [verifidUnique] = await connection.query(`SELECT * FROM Usuario WHERE telefono = ?`, [phone]);
 
             if (verifidUnique[0]) {
