@@ -1,13 +1,12 @@
 "use client";
 
-import ScrollReveal from "scrollreveal";
 import { signIn } from "next-auth/react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { loginSchema } from "@/utils/zod";
 import { Button, Input } from "@nextui-org/react";
 import { EyeFilledIcon } from "@/components/icons/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "@/components/icons/EyeSlashFilledIcon";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
 const AdminPage = () => {
   const [email, setEmail] = useState("");
@@ -55,27 +54,9 @@ const AdminPage = () => {
     }
   };
 
-  // useEffect para animaciones de scroll
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      ScrollReveal().reveal(".scrollReveal1", {
-        distance: "100px",
-        origin: "left",
-        duration: 1000,
-        delay: 300,
-      });
-      ScrollReveal().reveal(".scrollReveal2", {
-        distance: "100px",
-        origin: "right",
-        duration: 1000,
-        delay: 300,
-      });
-    }
-  }, []);
-
   return (
     <section className="flex flex-col-reverse sm:flex-row gap-2 h-screen bg-platinum">
-      <div className=" w-full sm:w-2/4 md:w-2/5 p-2 flex flex-col justify-center bg-platinum scrollReveal1">
+      <div className=" w-full sm:w-2/4 md:w-2/5 p-2 flex flex-col justify-center bg-platinum ">
         <div>
           <p className="text-3xl my-3 font-bold text-center">Iniciar Sesión</p>
         </div>
@@ -158,7 +139,7 @@ const AdminPage = () => {
         </form>
       </div>
 
-      <div className=" bg-gray h-full w-full sm:w-2/4 md:w-3/5 flex flex-col justify-center items-center rounded-bl-full rounded-br-full sm:rounded-br-none sm:rounded-bl-full sm:rounded-tl-full scrollReveal2">
+      <div className=" bg-gray h-full w-full sm:w-2/4 md:w-3/5 flex flex-col justify-center items-center rounded-bl-full rounded-br-full sm:rounded-br-none sm:rounded-bl-full sm:rounded-tl-full ">
         <div>
           <p className=" text-4xl md:text-6xl font-bold p-3 shadow-large bg-platinum">
             ADMIN

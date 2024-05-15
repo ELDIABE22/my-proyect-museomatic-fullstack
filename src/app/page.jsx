@@ -3,16 +3,16 @@
 import axios from "axios";
 import Image from "next/image";
 import CardHome from "@/components/CardHome";
-import { Button, Spinner } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { Button, Spinner } from "@nextui-org/react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const [museums, setMuseums] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const { data: session, status } = useSession();
+  const { status } = useSession();
 
   const router = useRouter();
 
@@ -54,23 +54,6 @@ export default function Home() {
     }
   };
 
-  // useEffect para animaciones de scroll
-  // useEffect(() => {
-  //   const scrollReveal = {
-  //     distance: "100px",
-  //     origin: "bottom",
-  //     duration: 1000,
-  //   };
-
-  //   if (typeof window !== "undefined") {
-  //     ScrollReveal().reveal(".scrollReveal1", { ...scrollReveal });
-  //     ScrollReveal().reveal(".scrollReveal2", { ...scrollReveal, delay: 200 });
-  //     ScrollReveal().reveal(".scrollReveal3", { ...scrollReveal, delay: 300 });
-  //     ScrollReveal().reveal(".scrollReveal4", { ...scrollReveal, delay: 400 });
-  //     ScrollReveal().reveal(".scrollReveal5", { ...scrollReveal, delay: 500 });
-  //   }
-  // }, []);
-
   useEffect(() => {
     getMuseums();
   }, []);
@@ -99,12 +82,12 @@ export default function Home() {
               src="/bg-arrow.png"
             />
             <div>
-              <h1 className=" mb-4 text-7xl font-extrabold text-white">
+              <h1 className="mb-4 text-7xl font-extrabold text-white">
                 MUSEO
                 <br />
                 <span className="text-black">MATIC</span>
               </h1>
-              <div className=" max-w-[350px] mb-8 flex gap-1 flex-wrap">
+              <div className="max-w-[350px] mb-8 flex gap-1 flex-wrap">
                 <p className="text-white leading-6">
                   Explora la historia y el arte en{" "}
                 </p>
