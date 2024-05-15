@@ -6,7 +6,7 @@ import { MuseumProvider } from "@/context/MuseumContext";
 
 export const metadata = {
   title: "MuseoMatic",
-  description: "Explora la historia y el arte en MUSEOMATIC",
+  description: "Explora la historia y vive el arte en MUSEOMATIC",
 };
 
 export default function RootLayout({ children }) {
