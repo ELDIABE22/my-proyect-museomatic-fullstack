@@ -30,12 +30,10 @@ const ReceiptPage = ({ params }) => {
         };
 
         setTicket(updateDate);
-        setLoading(false);
-
-        return;
+      } else if (message === "Petición denegada") {
+        router.push("/");
       }
 
-      router.push("/");
       setLoading(false);
     } catch (error) {
       console.log(

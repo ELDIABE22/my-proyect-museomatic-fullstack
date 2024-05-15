@@ -23,7 +23,6 @@ const ModalEvent = ({ isOpen, onOpenChange, events, setOpenModalEvent }) => {
 
   const handlePayTicket = async () => {
     setCreatingPayment(true);
-    alert("Creando pasarela de pago...");
 
     if (status !== "authenticated") {
       setCreatingPayment(false);

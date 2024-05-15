@@ -11,7 +11,13 @@ const TicketPaymentPage = ({ params }) => {
   const getTicket = async () => {
     try {
       const res = await axios.get(`/api/create-payment-intent/${params.id}`);
-      const { ticket } = res.data;
+      const { message, ticket } = res.data;
+
+      if (message === "Agotado") {
+        alert("Tickets agotados");
+        router.push("/");
+        return;
+      }
 
       setTicketTotal(parseFloat(ticket.PrecioDelEvento));
       setLoading(false);

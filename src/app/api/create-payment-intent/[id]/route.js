@@ -20,7 +20,6 @@ export async function GET(res, { params }) {
 
         const [ticketAvailable] = await connection.query(`
             SELECT E.capacidad AS CapacidadDelEvento,
-            E.precio AS PrecioDelEvento, 
             SUM(T.cantidad_tickets) AS NumeroDeTicketsVendidos
             FROM Ticket T
             INNER JOIN 
@@ -29,13 +28,19 @@ export async function GET(res, { params }) {
             GROUP BY E.id
         `, [params.id]);
 
+        const [eventPrice] = await connection.query(`
+            SELECT precio AS PrecioDelEvento
+            FROM Evento 
+            WHERE id = UUID_TO_BIN(?)
+        `, [params.id]);
+
         if (eventStatus[0].estado_evento === "pendiente" && ticketAvailable.length > 0) {
             if (ticketAvailable[0].CapacidadDelEvento <= ticketAvailable[0].NumeroDeTicketsVendidos) {
-                return NextResponse.json({ message: 'Agotado', ticket: ticketAvailable[0] });
+                return NextResponse.json({ message: 'Agotado', ticket: eventPrice[0] });
             }
         }
 
-        return NextResponse.json({ message: 'Disponible', ticket: ticketAvailable[0] });
+        return NextResponse.json({ message: 'Disponible', ticket: eventPrice[0] });
     } catch (error) {
         console.log(error.message);
         return NextResponse.json({ message: `Error al consultar el evento con ID: ${params.id}`, error: error.message });
