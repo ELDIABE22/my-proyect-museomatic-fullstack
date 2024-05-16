@@ -18,6 +18,7 @@ import {
   Input,
   Textarea,
 } from "@nextui-org/react";
+import toast from "react-hot-toast";
 
 const NewEventsPage = () => {
   const [name, setName] = useState("");
@@ -109,10 +110,32 @@ const NewEventsPage = () => {
       const { message } = res.data;
 
       if (message === "Evento creado") {
-        alert(message);
+        toast.success(message, {
+          style: {
+            backgroundColor: "#DCDCDC",
+            color: "#000000",
+            border: "1px solid #000000",
+            padding: "16px",
+          },
+          iconTheme: {
+            primary: "#000000",
+            secondary: "#FFFFFF",
+          },
+        });
         router.push("/admin/dashboard/events");
       } else {
-        alert(message);
+        toast.error(message, {
+          style: {
+            backgroundColor: "#FF0000",
+            color: "#FFFFFF",
+            border: "1px solid #FF0000",
+            padding: "16px",
+          },
+          iconTheme: {
+            primary: "#FF0000",
+            secondary: "#FFFFFF",
+          },
+        });
       }
 
       setCreatingEvent(false);

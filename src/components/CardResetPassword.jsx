@@ -13,6 +13,7 @@ import {
   Divider,
   Input,
 } from "@nextui-org/react";
+import toast from "react-hot-toast";
 
 const CardResetPassword = ({ params }) => {
   const [newPassword, setNewPassword] = useState("");
@@ -43,7 +44,18 @@ const CardResetPassword = ({ params }) => {
 
       if (newPassword !== confirmNewPassword) {
         setUpdateNewPasswordLoading(false);
-        alert("Las contraseñas no coinciden!");
+        toast.error("Las contraseñas no coinciden!", {
+          style: {
+            backgroundColor: "#FF0000",
+            color: "#FFFFFF",
+            border: "1px solid #FF0000",
+            padding: "16px",
+          },
+          iconTheme: {
+            primary: "#FF0000",
+            secondary: "#FFFFFF",
+          },
+        });
         return;
       }
 
@@ -57,10 +69,32 @@ const CardResetPassword = ({ params }) => {
       const { message } = res.data;
 
       if (message === "Tu contraseña ha sido restablecida") {
-        alert(message);
+        toast.success(message, {
+          style: {
+            backgroundColor: "#DCDCDC",
+            color: "#000000",
+            border: "1px solid #000000",
+            padding: "16px",
+          },
+          iconTheme: {
+            primary: "#000000",
+            secondary: "#FFFFFF",
+          },
+        });
         router.push("/auth/login");
       } else {
-        alert(message);
+        toast.error(message, {
+          style: {
+            backgroundColor: "#FF0000",
+            color: "#FFFFFF",
+            border: "1px solid #FF0000",
+            padding: "16px",
+          },
+          iconTheme: {
+            primary: "#FF0000",
+            secondary: "#FFFFFF",
+          },
+        });
       }
 
       setUpdateNewPasswordLoading(false);

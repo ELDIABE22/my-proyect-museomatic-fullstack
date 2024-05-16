@@ -13,42 +13,40 @@ export async function GET() {
 
 export async function PUT(req) {
     try {
-        const { id, name, phone } = await req.json();
+        const { id, name, phone, admin } = await req.json();
 
-        const [verifidUnique] = await connection.query(`SELECT * FROM Usuario WHERE telefono = ?`, [phone]);
+        if (admin !== null) {
+            const [verifidUnique] = await connection.query(`SELECT * FROM Usuario WHERE telefono = ?`, [phone]);
 
-        const idBuffer = Buffer.from(id.data);
-        const idString = idBuffer.toString('hex');
+            if (verifidUnique[0]) {
+                const idBufferHex = verifidUnique[0].id.toString('hex');
 
-        if (verifidUnique[0]) {
-            const idBufferHex = verifidUnique[0].id.toString('hex');
+                const validatePhone = idBufferHex === id;
 
-            const validatePhone = idBufferHex === idString;
+                if (!validatePhone) return NextResponse.json({ message: "El telefono esta registrado" });
+            }
 
-            if (!validatePhone) return NextResponse.json({ message: "El telefono esta registrado" });
+            const values = [name, phone, admin, id];
+
+            await connection.query('UPDATE Usuario SET nombre = ?, telefono = ?, usuario_admin = ? WHERE id = UUID_TO_BIN(?)', values);
+        } else {
+            const [verifidUnique] = await connection.query(`SELECT * FROM Usuario WHERE telefono = ?`, [phone]);
+
+            const idBuffer = Buffer.from(id.data);
+            const idString = idBuffer.toString('hex');
+
+            if (verifidUnique[0]) {
+                const idBufferHex = verifidUnique[0].id.toString('hex');
+
+                const validatePhone = idBufferHex === idString;
+
+                if (!validatePhone) return NextResponse.json({ message: "El telefono esta registrado" });
+            }
+
+            const values = [name, phone, idString];
+
+            await connection.query('UPDATE Usuario SET nombre = ?, telefono = ? WHERE id = UUID_TO_BIN(?)', values);
         }
-
-        const values = [name, phone, idString];
-
-        await connection.query('UPDATE Usuario SET nombre = ?, telefono = ? WHERE id = UUID_TO_BIN(?)', values);
-
-        // if (admin !== null) {
-        //     const [verifidUnique] = await connection.query(`SELECT * FROM Usuario WHERE telefono = ?`, [phone]);
-
-        //     if (verifidUnique[0]) {
-        //         const idBufferHex = verifidUnique[0].id.toString('hex');
-
-        //         const validatePhone = idBufferHex === id;
-
-        //         if (!validatePhone) return NextResponse.json({ message: "El telefono esta registrado" });
-        //     }
-
-        //     const values = [name, phone, admin, id];
-
-        //     await connection.query('UPDATE Usuario SET nombre = ?, telefono = ?, usuario_admin = ? WHERE id = UUID_TO_BIN(?)', values);
-        // } else {
-
-        // }
 
         return NextResponse.json({ message: 'Datos actualizados' });
     } catch (error) {

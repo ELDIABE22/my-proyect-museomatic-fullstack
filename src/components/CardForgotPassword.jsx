@@ -11,6 +11,7 @@ import {
   Divider,
   Input,
 } from "@nextui-org/react";
+import toast from "react-hot-toast";
 
 const CardForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -33,10 +34,32 @@ const CardForgotPassword = () => {
       const { message } = res.data;
 
       if (message === "Correo enviado para restablecer contraseña") {
-        alert(message);
+        toast.success(message, {
+          style: {
+            backgroundColor: "#DCDCDC",
+            color: "#000000",
+            border: "1px solid #000000",
+            padding: "16px",
+          },
+          iconTheme: {
+            primary: "#000000",
+            secondary: "#FFFFFF",
+          },
+        });
         setEmail("");
       } else {
-        alert(message);
+        toast.error(message, {
+          style: {
+            backgroundColor: "#FF0000",
+            color: "#FFFFFF",
+            border: "1px solid #FF0000",
+            padding: "16px",
+          },
+          iconTheme: {
+            primary: "#FF0000",
+            secondary: "#FFFFFF",
+          },
+        });
       }
 
       setSendingMail(false);

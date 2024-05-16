@@ -8,6 +8,7 @@ export async function GET(res, { params }) {
         // Convierte la cadena de texto del ID a un Buffer
         const idBuffer = Buffer.from(idString, 'hex');
 
+        // CONSULTA SENCILLA
         const [collection] = await connection.query('SELECT * FROM Coleccion WHERE id = ?', [idBuffer]);
 
         return NextResponse.json(collection[0]);

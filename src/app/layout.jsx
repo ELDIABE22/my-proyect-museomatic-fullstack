@@ -1,6 +1,7 @@
 import "./globals.css";
 
 import NextAuthProviders from "@/context/NextAuthProviders";
+import { Toaster } from "react-hot-toast";
 import { NextProviderUI } from "@/context/NextUIProvider";
 import { MuseumProvider } from "@/context/MuseumContext";
 
@@ -16,6 +17,7 @@ export default function RootLayout({ children }) {
         <MuseumProvider>
           <NextProviderUI>
             <NextAuthProviders>{children}</NextAuthProviders>
+            <Toaster />
           </NextProviderUI>
         </MuseumProvider>
       </body>

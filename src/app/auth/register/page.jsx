@@ -4,13 +4,13 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { GoogleIcon } from "@/components/icons/GoogleIcon";
 import { EyeFilledIcon } from "@/components/icons/EyeFilledIcon";
 import { registerSchema } from "@/utils/zod";
 import { signIn, useSession } from "next-auth/react";
 import { EyeSlashFilledIcon } from "@/components/icons/EyeSlashFilledIcon";
 import { useEffect, useState } from "react";
 import { Button, Input, Spinner } from "@nextui-org/react";
+import toast from "react-hot-toast";
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
@@ -53,11 +53,33 @@ const RegisterPage = () => {
           redirect: false,
         });
 
-        // router.push("/");
+        toast.success(message, {
+          style: {
+            backgroundColor: "#DCDCDC",
+            color: "#000000",
+            border: "1px solid #000000",
+            padding: "16px",
+          },
+          iconTheme: {
+            primary: "#000000",
+            secondary: "#FFFFFF",
+          },
+        });
 
-        alert(message);
+        router.push("/museums");
       } else {
-        alert(message);
+        toast.error(message, {
+          style: {
+            backgroundColor: "#FF0000",
+            color: "#FFFFFF",
+            border: "1px solid #FF0000",
+            padding: "16px",
+          },
+          iconTheme: {
+            primary: "#FF0000",
+            secondary: "#FFFFFF",
+          },
+        });
       }
 
       setCreatingUserLoading(false);
@@ -193,14 +215,6 @@ const RegisterPage = () => {
                     {creatingUserLoading ? "Registrando..." : "Registrar"}
                   </p>
                 </Button>
-                <button
-                  type="button"
-                  onClick={() => signIn("google", { callbackUrl: "/" })}
-                  className="flex justify-center max-h-12 gap-3 bg-white p-[14px] rounded-2xl cursor-pointer shadow-large shadow-black"
-                >
-                  <GoogleIcon />
-                  <p className="font-bold text-[15px]">Continuar con Google</p>
-                </button>
               </div>
             </form>
             <div className="text-center text-black/70 text-xs flex justify-center gap-1">

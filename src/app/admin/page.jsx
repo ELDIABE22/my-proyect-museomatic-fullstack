@@ -7,6 +7,7 @@ import { loginSchema } from "@/utils/zod";
 import { Button, Input } from "@nextui-org/react";
 import { EyeFilledIcon } from "@/components/icons/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "@/components/icons/EyeSlashFilledIcon";
+import toast from "react-hot-toast";
 
 const AdminPage = () => {
   const [email, setEmail] = useState("");
@@ -38,11 +39,34 @@ const AdminPage = () => {
       });
 
       if (res.error) {
-        alert(res.error);
+        toast.error(res.error, {
+          style: {
+            backgroundColor: "#FF0000",
+            color: "#FFFFFF",
+            border: "1px solid #FF0000",
+            padding: "16px",
+          },
+          iconTheme: {
+            primary: "#FF0000",
+            secondary: "#FFFFFF",
+          },
+        });
       }
 
       if (res.ok) {
-        alert("Sesión admin iniciada");
+        toast.success("Sesión admin iniciada", {
+          style: {
+            backgroundColor: "#DCDCDC",
+            color: "#000000",
+            border: "1px solid #000000",
+            padding: "16px",
+          },
+          iconTheme: {
+            primary: "#000000",
+            secondary: "#FFFFFF",
+          },
+        });
+
         router.push("/admin/dashboard");
       }
 

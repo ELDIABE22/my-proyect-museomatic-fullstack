@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(res, { params }) {
     try {
+        // CONSULTA ANIDADA
         const [eventStatus] = await connection.query(`
             SELECT 
                 CASE 
@@ -18,6 +19,7 @@ export async function GET(res, { params }) {
             return NextResponse.json({ message: `Evento ${eventStatus[0].estado_evento}` });
         }
 
+        // CONSULTA CRUCE DE TABLA
         const [ticketAvailable] = await connection.query(`
             SELECT E.capacidad AS CapacidadDelEvento,
             SUM(T.cantidad_tickets) AS NumeroDeTicketsVendidos
@@ -28,10 +30,13 @@ export async function GET(res, { params }) {
             GROUP BY E.id
         `, [params.id]);
 
+        // CONSULTA ANIDADA
         const [eventPrice] = await connection.query(`
-            SELECT precio AS PrecioDelEvento
-            FROM Evento 
-            WHERE id = UUID_TO_BIN(?)
+            SELECT (
+                SELECT precio 
+                FROM Evento 
+                WHERE id = UUID_TO_BIN(?)
+            ) AS PrecioDelEvento;
         `, [params.id]);
 
         if (eventStatus[0].estado_evento === "pendiente" && ticketAvailable.length > 0) {

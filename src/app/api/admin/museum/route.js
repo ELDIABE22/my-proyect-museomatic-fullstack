@@ -8,6 +8,7 @@ export async function POST(req) {
         const image = data.get("image");
         const dataElemnet = JSON.parse(data.get("data"));
 
+        // CONSULTA SENCILLA
         const [validateExistenceName] = await connection.query('SELECT * FROM Museo WHERE LOWER(nombre) = LOWER(?)', [dataElemnet.name]);
 
         if (validateExistenceName[0]) {
@@ -41,6 +42,7 @@ export async function POST(req) {
             dataElemnet.entryPrice,
         ];
 
+        // CONSULTA SENCILLA
         await connection.query('INSERT INTO Museo (nombre, direccion, descripcion, imagenURL, hora_apertura, hora_cierre, sitio_web, fecha_fundacion, ciudad, precio_entrada) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', values);
 
         return NextResponse.json({ message: "Museo agregado" });
@@ -52,6 +54,7 @@ export async function POST(req) {
 
 export async function GET() {
     try {
+        // CONSULTA SENCILLA
         const [getMuseum] = await connection.query('SELECT * FROM Museo');
 
         return NextResponse.json(getMuseum);

@@ -3,6 +3,7 @@
 import axios from "axios";
 import TabsTicket from "@/components/TabsTicket";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const TicketPaymentPage = ({ params }) => {
   const [ticketTotal, setTicketTotal] = useState(null);
@@ -14,7 +15,18 @@ const TicketPaymentPage = ({ params }) => {
       const { message, ticket } = res.data;
 
       if (message === "Agotado") {
-        alert("Tickets agotados");
+        toast.success("Tickets agotados", {
+          style: {
+            backgroundColor: "#DCDCDC",
+            color: "#000000",
+            border: "1px solid #000000",
+            padding: "16px",
+          },
+          iconTheme: {
+            primary: "#000000",
+            secondary: "#FFFFFF",
+          },
+        });
         router.push("/");
         return;
       }

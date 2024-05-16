@@ -14,6 +14,7 @@ export async function POST(req) {
 
         const idEventBinary = Buffer.from(evento_id, 'hex');
 
+        // CONSULTA ANIDADA
         const [eventStatus] = await connection.query(`
             SELECT 
                 CASE 
@@ -29,6 +30,7 @@ export async function POST(req) {
             return NextResponse.json({ message: `Evento ${eventStatus[0].estado_evento}` });
         }
 
+        // CONSULTA DE GRUPO
         const [ticketsAvailable] = await connection.query(`
             SELECT 
             E.capacidad, 

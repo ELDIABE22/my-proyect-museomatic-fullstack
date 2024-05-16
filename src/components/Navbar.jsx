@@ -97,9 +97,9 @@ const Navbar = ({ openModal, setOpenModal, user, loading, getUser }) => {
                     Admin
                   </DropdownItem>
                 )}
-                <DropdownItem key="tickets" textValue="Tiquetes">
+                {/* <DropdownItem key="tickets" textValue="Tiquetes">
                   Tiquetes
-                </DropdownItem>
+                </DropdownItem> */}
                 <DropdownItem
                   key="signoff"
                   className="text-danger"

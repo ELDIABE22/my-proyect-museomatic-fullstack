@@ -26,6 +26,7 @@ export async function POST(req) {
 
         const values = [idMuseumBinary, dataElemnet.name, dataElemnet.description, formattedEventDate, formattedEventTimeInit, dataElemnet.price, dataElemnet.typeEvent, dataElemnet.capacity, dataElemnet.imagenURL, formattedEventTimeFinally];
 
+        // CONSULTA SENCILLA
         await connection.query('INSERT INTO Evento (museo_id, nombre, descripcion, fecha, hora_inicio, precio, tipo_evento, capacidad, imagenURL, hora_fin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', values);
 
         return NextResponse.json({ message: "Evento creado" });
@@ -36,6 +37,7 @@ export async function POST(req) {
 
 export async function GET() {
     try {
+        // CONSULTA SENCILLA
         const [getEvents] = await connection.query('SELECT * FROM Evento');
 
         return NextResponse.json(getEvents);
@@ -83,6 +85,7 @@ export async function PUT(req) {
 
         const values = [idMuseumBinary, dataElemnet.name, dataElemnet.description, formattedEventDate, formattedEventTimeInit, dataElemnet.price, dataElemnet.typeEvent, dataElemnet.capacity, dataElemnet.state, dataElemnet.imagenURL, formattedEventTimeFinally, id];
 
+        // CONSULTA SENCILLA
         await connection.query('UPDATE Evento SET museo_id = ?, nombre = ?, descripcion = ?, fecha = ?, hora_inicio = ?, precio = ?, tipo_evento = ?, capacidad = ?, estado = ?, imagenURL = ?, hora_fin = ? WHERE id = UUID_TO_BIN(?)', values);
 
         return NextResponse.json({ message: "Evento actualizado" });
@@ -100,6 +103,7 @@ export async function DELETE(req) {
 
         const idBuffer = Buffer.from(id, 'hex');
 
+        // CONSULTA SENCILLA
         await connection.query('DELETE FROM Evento WHERE id = ?', [idBuffer]);
 
         if (imageUrlRemove) {

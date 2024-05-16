@@ -1,15 +1,16 @@
 "use client";
 
-import Image from "next/image";
+import toast from "react-hot-toast";
 import Link from "next/link";
-import { signIn, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import Image from "next/image";
+
 import { useRouter } from "next/navigation";
-import { GoogleIcon } from "@/components/icons/GoogleIcon";
 import { loginSchema } from "@/utils/zod";
 import { EyeFilledIcon } from "@/components/icons/EyeFilledIcon";
-import { Button, Input, Spinner } from "@nextui-org/react";
+import { signIn, useSession } from "next-auth/react";
 import { EyeSlashFilledIcon } from "@/components/icons/EyeSlashFilledIcon";
+import { useEffect, useState } from "react";
+import { Button, Input, Spinner } from "@nextui-org/react";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -43,11 +44,34 @@ const LoginPage = () => {
       });
 
       if (res.error) {
-        alert(res.error);
+        toast.error(res.error, {
+          style: {
+            backgroundColor: "#FF0000",
+            color: "#FFFFFF",
+            border: "1px solid #FF0000",
+            padding: "16px",
+          },
+          iconTheme: {
+            primary: "#FF0000",
+            secondary: "#FFFFFF",
+          },
+        });
       }
 
       if (res.ok) {
-        alert("Sesión iniciada");
+        toast.success("Sesión iniciada", {
+          style: {
+            backgroundColor: "#DCDCDC",
+            color: "#000000",
+            border: "1px solid #000000",
+            padding: "16px",
+          },
+          iconTheme: {
+            primary: "#000000",
+            secondary: "#FFFFFF",
+          },
+        });
+
         router.push("/museums");
       }
 
@@ -170,14 +194,6 @@ const LoginPage = () => {
                     {userLoginLoading ? "Ingresando..." : "Ingresar"}
                   </p>
                 </Button>
-                <button
-                  type="button"
-                  onClick={() => signIn("google", { callbackUrl: "/" })}
-                  className="flex justify-center max-h-12 gap-3 bg-white p-[14px] rounded-2xl cursor-pointer shadow-large shadow-black"
-                >
-                  <GoogleIcon />
-                  <p className="font-bold text-[15px]">Continuar con Google</p>
-                </button>
               </div>
             </form>
             <div className="text-center text-black/70 text-xs flex justify-center gap-1">

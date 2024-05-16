@@ -13,6 +13,7 @@ import {
   Chip,
 } from "@nextui-org/react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 const ModalEvent = ({ isOpen, onOpenChange, events, setOpenModalEvent }) => {
   const [creatingPayment, setCreatingPayment] = useState(false);
@@ -26,7 +27,18 @@ const ModalEvent = ({ isOpen, onOpenChange, events, setOpenModalEvent }) => {
 
     if (status !== "authenticated") {
       setCreatingPayment(false);
-      alert("Registrate o inicia sesión para comprar");
+      toast.error("Registrate o inicia sesión para comprar", {
+        style: {
+          backgroundColor: "#FF0000",
+          color: "#FFFFFF",
+          border: "1px solid #FF0000",
+          padding: "16px",
+        },
+        iconTheme: {
+          primary: "#FF0000",
+          secondary: "#FFFFFF",
+        },
+      });
       return;
     }
 
@@ -37,7 +49,18 @@ const ModalEvent = ({ isOpen, onOpenChange, events, setOpenModalEvent }) => {
       if (message === "Disponible") {
         router.push(`/ticket/payment/${events.id}`);
       } else {
-        alert(message);
+        toast.error(message, {
+          style: {
+            backgroundColor: "#FF0000",
+            color: "#FFFFFF",
+            border: "1px solid #FF0000",
+            padding: "16px",
+          },
+          iconTheme: {
+            primary: "#FF0000",
+            secondary: "#FFFFFF",
+          },
+        });
       }
 
       setCreatingPayment(false);

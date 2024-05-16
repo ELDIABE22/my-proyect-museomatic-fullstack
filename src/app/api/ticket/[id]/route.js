@@ -9,6 +9,7 @@ export async function GET(res, { params }) {
 
         const idUserBinary = Buffer.from(user.id.data, 'hex');
 
+        // CONSULTA CRUCE DE TABLA
         const [result] = await connection.query(`
             SELECT 
                 Ticket.numero_tickets, 

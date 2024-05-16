@@ -3,8 +3,10 @@ import { NextResponse } from "next/server";
 
 export async function GET(res, { params }) {
     try {
+        // CONSULTA DE CRUCE DE TABLA
         const [getCollection] = await connection.query('SELECT c.* FROM Museo m INNER JOIN Coleccion c ON m.id = c.museo_id WHERE m.id = UUID_TO_BIN(?)', [params.id]);
 
+        // CONSULTA DE CRUCE DE TABLA
         const [getEvents] = await connection.query(`
             SELECT e.*, 
             IF(SUM(t.cantidad_tickets) >= e.capacidad, 'Agotado', 'Disponible') AS estado_tickets,

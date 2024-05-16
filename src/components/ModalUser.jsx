@@ -11,6 +11,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@nextui-org/react";
+import toast from "react-hot-toast";
 
 const ModalUser = ({
   isOpen,
@@ -42,16 +43,39 @@ const ModalUser = ({
         id: dataUser.id,
         name,
         phone,
+        admin: null,
       });
 
       const { message } = res.data;
 
       if (message === "Datos actualizados") {
-        alert(message);
+        toast.success(message, {
+          style: {
+            backgroundColor: "#DCDCDC",
+            color: "#000000",
+            border: "1px solid #000000",
+            padding: "16px",
+          },
+          iconTheme: {
+            primary: "#000000",
+            secondary: "#FFFFFF",
+          },
+        });
         setOpenModal(!isOpen);
         getUser();
       } else {
-        alert(message);
+        toast.error(message, {
+          style: {
+            backgroundColor: "#FF0000",
+            color: "#FFFFFF",
+            border: "1px solid #FF0000",
+            padding: "16px",
+          },
+          iconTheme: {
+            primary: "#FF0000",
+            secondary: "#FFFFFF",
+          },
+        });
       }
 
       setUpdateUser(false);

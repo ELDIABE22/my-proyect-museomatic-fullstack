@@ -15,6 +15,7 @@ import {
   CardFooter,
   Button,
 } from "@nextui-org/react";
+import toast from "react-hot-toast";
 
 const TabsTicket = ({ params, ticketTotal }) => {
   const { data: session } = useSession();
@@ -61,15 +62,48 @@ const TabsTicket = ({ params, ticketTotal }) => {
 
       switch (message) {
         case "Compra realizada":
-          alert("Redireccionando...");
+          toast.success("Redireccionando...", {
+            style: {
+              backgroundColor: "#DCDCDC",
+              color: "#000000",
+              border: "1px solid #000000",
+              padding: "16px",
+            },
+            iconTheme: {
+              primary: "#000000",
+              secondary: "#FFFFFF",
+            },
+          });
           router.push(`/ticket/${idTicket}/receipt`);
           break;
         case "Tickets agotados":
-          alert(message);
+          toast.error(message, {
+            style: {
+              backgroundColor: "#FF0000",
+              color: "#FFFFFF",
+              border: "1px solid #FF0000",
+              padding: "16px",
+            },
+            iconTheme: {
+              primary: "#FF0000",
+              secondary: "#FFFFFF",
+            },
+          });
           router.push("/museums");
           break;
         default:
-          alert(message);
+          toast.error(message, {
+            style: {
+              backgroundColor: "#FF0000",
+              color: "#FFFFFF",
+              border: "1px solid #FF0000",
+              padding: "16px",
+            },
+            iconTheme: {
+              primary: "#FF0000",
+              secondary: "#FFFFFF",
+            },
+          });
           break;
       }
 

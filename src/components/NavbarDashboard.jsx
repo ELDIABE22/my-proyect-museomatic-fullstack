@@ -61,7 +61,7 @@ const NavbarDashboard = () => {
             <Users />
             Usuarios
           </Link>
-          <Link
+          {/* <Link
             href={"/admin/dashboard/sales"}
             className={
               isActive("/admin/dashboard/sales") ? activeLink : inactiveLink
@@ -69,7 +69,7 @@ const NavbarDashboard = () => {
           >
             <QueueList />
             Ventas
-          </Link>
+          </Link> */}
         </div>
         <Link
           href={"/museums"}
