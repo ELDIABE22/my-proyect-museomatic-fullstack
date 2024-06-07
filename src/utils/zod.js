@@ -88,3 +88,11 @@ export const resetPasswordSchema = z.object({
     newPassword: z.string().min(1, { message: { newPassword: 'Es requerido' } }).min(6, { message: { newPassword: 'La contraseña debe tener al menos 6 caracteres' } }).max(15, { message: { newPassword: 'La contraseña no puede tener más de 15 caracteres' } }),
     confirmNewPassword: z.string().min(1, { message: { confirmNewPassword: 'Es requerido' } }).min(6, { message: { confirmNewPassword: 'La contraseña debe tener al menos 6 caracteres' } }).max(15, { message: { confirmNewPassword: 'La contraseña no puede tener más de 15 caracteres' } }),
 })
+
+export const commentSchema = z.object({
+    comment: z.string().min(1, { message: { comment: 'Es requerido' } }),
+});
+
+export const searchSchema = z.object({
+    idMuseum: z.string().min(1, { message: { idMuseum: 'Es requerido' } }),
+});

@@ -23,11 +23,20 @@ export async function GET(res, { params }) {
             ORDER BY e.fecha DESC;
         `, [params.id]);
 
+        const [getForo] = await connection.query(`
+            SELECT f.id, f.comentario, u.nombre
+            FROM Museo m
+            INNER JOIN Foro f ON m.id = f.museo_id
+            INNER JOIN Usuario u ON f.user_id = u.id
+            WHERE m.id = UUID_TO_BIN(?)
+        `, [params.id]);
+
         return NextResponse.json({
             dataCollection: getCollection,
             dataEvents: getEvents,
+            dataForo: getForo,
         });
     } catch (error) {
-        return NextResponse.json({ message: `Error al consultar las colecciones y los eventos del museo con ID: ${params.id}` + error.message })
+        return NextResponse.json({ message: `Error al consultar las colecciones, eventos y comentarios del museo con ID: ${params.id}` + error.message })
     }
 }

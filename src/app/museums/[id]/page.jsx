@@ -13,6 +13,7 @@ const MuseumPage = ({ params }) => {
   const [museum, setMuseum] = useState({});
   const [events, setEvents] = useState([]);
   const [collections, setCollections] = useState([]);
+  const [foro, setForo] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const getMuseumDetails = async () => {
@@ -43,7 +44,7 @@ const MuseumPage = ({ params }) => {
       );
       const { data: eventsAndCollectionsData } = eventsAndCollectionsRes;
 
-      const { dataCollection, dataEvents } = eventsAndCollectionsData;
+      const { dataCollection, dataEvents, dataForo } = eventsAndCollectionsData;
 
       const collections = dataCollection.map((coll) => {
         const idBuffer = Buffer.from(coll.id.data);
@@ -70,8 +71,19 @@ const MuseumPage = ({ params }) => {
         };
       });
 
+      const foro = dataForo.map((fo) => {
+        const idBuffer = Buffer.from(fo.id.data);
+        const idString = idBuffer.toString("hex");
+
+        return {
+          ...fo,
+          id: idString,
+        };
+      });
+
       setCollections(collections);
       setEvents(events);
+      setForo(foro);
 
       setLoading(false);
     } catch (error) {
@@ -158,7 +170,12 @@ const MuseumPage = ({ params }) => {
 
           <Divider />
 
-          <TabsMuseum events={events} collections={collections} />
+          <TabsMuseum
+            events={events}
+            collections={collections}
+            foro={foro}
+            getMuseumDetails={getMuseumDetails}
+          />
         </>
       )}
     </section>
