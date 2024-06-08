@@ -2,7 +2,6 @@
 "use client";
 
 import axios from "axios";
-import ModalAdminUser from "@/components/ModalAdminUser";
 import DashboardLayout from "@/components/DashboardLayout";
 import { EyeIcon } from "@/components/icons/EyeIcon";
 import { useRouter } from "next/navigation";
@@ -27,8 +26,8 @@ import {
   TableHeader,
   TableRow,
   Tooltip,
-  useDisclosure,
 } from "@nextui-org/react";
+import Link from "next/link";
 
 const UsersPage = () => {
   const [users, setUsers] = useState([]);
@@ -37,12 +36,7 @@ const UsersPage = () => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
 
-  const [modalUserData, setModalUserData] = useState(null);
-  const [openModalUser, setOpenModalUser] = useState(false);
-
   const { data: session, status } = useSession();
-
-  const { onOpenChange } = useDisclosure();
 
   const router = useRouter();
 
@@ -162,9 +156,9 @@ const UsersPage = () => {
 
     switch (columnKey) {
       case "id":
-        return <p className="text-bold text-tiny capitalize">{user.id}</p>;
+        return <p className="font-bold text-tiny capitalize">{user.id}</p>;
       case "name":
-        return <p className="text-bold text-tiny capitalize">{user.nombre}</p>;
+        return <p className="font-bold text-tiny capitalize">{user.nombre}</p>;
       case "type":
         return (
           <Chip
@@ -183,15 +177,12 @@ const UsersPage = () => {
         return (
           <div className="relative flex justify-center">
             <Tooltip content="Editar">
-              <span
-                onClick={() => {
-                  setOpenModalUser(!modalUserData);
-                  setModalUserData(user);
-                }}
+              <Link
+                href={`/admin/dashboard/users/${user.id}`}
                 className="text-lg text-black cursor-pointer active:opacity-50"
               >
                 <EyeIcon />
-              </span>
+              </Link>
             </Tooltip>
           </div>
         );
@@ -305,18 +296,6 @@ const UsersPage = () => {
             )}
           </TableBody>
         </Table>
-      )}
-
-      {openModalUser && (
-        <ModalAdminUser
-          isOpen={openModalUser}
-          onOpenChange={onOpenChange}
-          setOpenModalUser={setOpenModalUser}
-          user={modalUserData}
-          session={session}
-          getUsers={getUsers}
-          setModalUserData={setModalUserData}
-        />
       )}
     </DashboardLayout>
   );

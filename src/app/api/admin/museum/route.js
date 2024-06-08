@@ -138,8 +138,22 @@ export async function DELETE(req) {
         const id = data.get("id");
         const imageUrlRemove = data.get("imageUrlRemove");
 
+        // Convertir el ID a Buffer para usarlo en la consulta SQL
         const idBuffer = Buffer.from(id, 'hex');
 
+        // Eliminar registros relacionados en la tabla Ticket
+        await connection.query('DELETE FROM Ticket WHERE evento_id IN (SELECT id FROM Evento WHERE museo_id = ?)', [idBuffer]);
+
+        // Eliminar registros relacionados en la tabla Coleccion
+        await connection.query('DELETE FROM Coleccion WHERE museo_id = ?', [idBuffer]);
+
+        // Eliminar registros relacionados en la tabla Eventos
+        await connection.query('DELETE FROM Evento WHERE museo_id = ?', [idBuffer]);
+
+        // Eliminar registros relacionados en la tabla Foro
+        await connection.query('DELETE FROM Foro WHERE museo_id = ?', [idBuffer]);
+
+        // Ahora que no hay referencias desde otras tablas, podemos eliminar el museo
         await connection.query('DELETE FROM Museo WHERE id = ?', [idBuffer]);
 
         if (imageUrlRemove) {
@@ -148,7 +162,7 @@ export async function DELETE(req) {
 
         return NextResponse.json({ message: 'Museo eliminado' });
     } catch (error) {
-        console.log(error);
-        return NextResponse.json({ message: 'Error al eliminar el evento', error: error.message });
+        console.log(error.message);
+        return NextResponse.json({ message: 'Error al eliminar el museo', error: error.message });
     }
 }

@@ -1,31 +1,43 @@
+"use client";
+
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { updateUserSchema } from "@/utils/zod";
 import { useEffect, useState } from "react";
-import {
-  Button,
-  Divider,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-} from "@nextui-org/react";
+import { Button, Card, CardBody, Divider, Input } from "@nextui-org/react";
 import toast from "react-hot-toast";
 
-const ModalUser = ({
-  isOpen,
-  onOpenChange,
-  setOpenModal,
-  dataUser,
-  getUser,
-}) => {
+const ProfilePage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
 
   const [updateUser, setUpdateUser] = useState(false);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const { data: session, status } = useSession();
+
+  const router = useRouter();
+
+  const getUser = async () => {
+    try {
+      const idSessionBuffer = Buffer.from(session?.user.id.data);
+      const idSessionString = idSessionBuffer.toString("hex");
+
+      const res = await axios.get(`/api/admin/user/${idSessionString}`);
+      const { data } = res;
+
+      setName(data.nombre);
+      setEmail(data.email);
+      setPhone(data.telefono);
+    } catch (error) {
+      console.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -40,7 +52,7 @@ const ModalUser = ({
       setError(null);
 
       const res = await axios.put("/api/admin/user", {
-        id: dataUser.id,
+        id: session?.user.id,
         name,
         phone,
         admin: null,
@@ -61,8 +73,8 @@ const ModalUser = ({
             secondary: "#FFFFFF",
           },
         });
-        setOpenModal(!isOpen);
-        getUser();
+
+        router.push("/museums");
       } else {
         toast.error(message, {
           style: {
@@ -77,40 +89,41 @@ const ModalUser = ({
           },
         });
       }
-
-      setUpdateUser(false);
     } catch (error) {
       const errors = error?.errors?.map((error) => error.message);
       setError(errors);
+    } finally {
       setUpdateUser(false);
     }
   };
 
   useEffect(() => {
-    setName(dataUser.nombre);
-    setEmail(dataUser.email);
-    setPhone(dataUser.telefono);
+    if (status === "authenticated") {
+      getUser();
+    } else if (status === "unauthenticated") {
+      return router.push("/");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
+  }, [session?.user, status]);
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={() => {
-        setOpenModal(!isOpen);
-        setError(null);
-      }}
-      onOpenChange={onOpenChange}
-      placement="center"
-      scrollBehavior="outside"
-    >
-      <ModalContent>
-        {(onClose) => (
-          <>
-            <form onSubmit={handleUpdate} className="flex flex-col gap-4">
-              <ModalHeader>Perfil</ModalHeader>
-              <Divider />
-              <ModalBody>
+    <section className="min-h-screen flex flex-col justify-center items-center px-5">
+      {loading ? (
+        <p className="text-center font-bold text-2xl">Cargando...</p>
+      ) : (
+        <>
+          <div>
+            <h2 className="text-3xl font-semibold">
+              Hola, <span className="text-gray">{name}</span>
+            </h2>
+            <p className="text-default-500 text-sm">
+              Aquí tienes tu Información
+            </p>
+          </div>
+          <Divider className="my-5" />
+          <Card className="w-full">
+            <CardBody>
+              <form onSubmit={handleUpdate} className="flex flex-col gap-5">
                 <Input
                   isDisabled={updateUser}
                   isClearable
@@ -140,28 +153,35 @@ const ModalUser = ({
                   isInvalid={error?.some((error) => error.phone)}
                   errorMessage={error?.find((error) => error.phone)?.phone}
                 />
-              </ModalBody>
-              <Divider />
-              <ModalFooter>
-                <Button
-                  color="danger"
-                  type="button"
-                  isDisabled={updateUser}
-                  variant="light"
-                  onPress={onClose}
-                >
-                  Cerrar
-                </Button>
-                <Button isLoading={updateUser} type="submit" color="success">
-                  Actualizar
-                </Button>
-              </ModalFooter>
-            </form>
-          </>
-        )}
-      </ModalContent>
-    </Modal>
+                <div className="flex justify-center gap-5">
+                  <Button
+                    type="button"
+                    color="danger"
+                    isDisabled={updateUser}
+                    variant="light"
+                    radius="none"
+                    className="w-full"
+                    onPress={() => router.push("/museums")}
+                  >
+                    Volver
+                  </Button>
+                  <Button
+                    radius="none"
+                    type="submit"
+                    isLoading={updateUser}
+                    color="default"
+                    className="bg-black text-white w-full"
+                  >
+                    Actualizar
+                  </Button>
+                </div>
+              </form>
+            </CardBody>
+          </Card>
+        </>
+      )}
+    </section>
   );
 };
 
-export default ModalUser;
+export default ProfilePage;

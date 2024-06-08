@@ -103,6 +103,8 @@ export async function DELETE(req) {
 
         const idBuffer = Buffer.from(id, 'hex');
 
+        await connection.query('DELETE FROM Ticket WHERE evento_id = ?', [idBuffer]);
+
         // CONSULTA SENCILLA
         await connection.query('DELETE FROM Evento WHERE id = ?', [idBuffer]);
 

@@ -70,15 +70,15 @@ export default function Home() {
             <Image
               alt="bg-dots"
               className="absolute top-0 left-[50%] -translate-x-full opacity-60"
-              width={140}
-              height={140}
+              width="140"
+              height="140"
               src="/bg-dots.png"
             />
             <Image
               alt="bg-arrow"
               className="absolute bottom-8 right-[20%] sm:right-[50%] -translate-x-full opacity-80"
-              width={140}
-              height={140}
+              width="140"
+              height="140"
               src="/bg-arrow.png"
             />
             <div>

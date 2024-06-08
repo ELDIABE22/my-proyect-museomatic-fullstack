@@ -19,7 +19,7 @@ import {
   User,
 } from "@nextui-org/react";
 
-const Navbar = ({ openModal, setOpenModal, user, loading, getUser }) => {
+const Navbar = ({ user, loading, getUser }) => {
   const {
     museums,
     filterValue,
@@ -82,7 +82,7 @@ const Navbar = ({ openModal, setOpenModal, user, loading, getUser }) => {
                   key="profile"
                   className="h-14 gap-2"
                   textValue={user.email}
-                  onPress={() => setOpenModal(!openModal)}
+                  onPress={() => router.push("/profile")}
                 >
                   <p className="font-bold">{user.email}</p>
                 </DropdownItem>

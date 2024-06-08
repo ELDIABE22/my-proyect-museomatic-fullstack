@@ -2,11 +2,9 @@
 
 import axios from "axios";
 import Navbar from "@/components/Navbar";
-import ModalUser from "@/components/ModalUser";
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useDisclosure } from "@nextui-org/react";
 
 export default function MuseumsLayout({ children }) {
   const [user, setUser] = useState({});
@@ -14,7 +12,6 @@ export default function MuseumsLayout({ children }) {
   const [openModal, setOpenModal] = useState(false);
 
   const { data: session, status } = useSession();
-  const { onOpenChange } = useDisclosure();
 
   const params = useParams();
 
@@ -45,16 +42,6 @@ export default function MuseumsLayout({ children }) {
         />
       )}
       {children}
-
-      {openModal && (
-        <ModalUser
-          isOpen={openModal}
-          onOpenChange={onOpenChange}
-          setOpenModal={setOpenModal}
-          dataUser={user}
-          getUser={getUser}
-        />
-      )}
     </section>
   );
 }
