@@ -51,11 +51,10 @@ const ProfilePage = () => {
 
       setError(null);
 
-      const res = await axios.put("/api/admin/user", {
+      const res = await axios.put("/api/profile", {
         id: session?.user.id,
         name,
         phone,
-        admin: null,
       });
 
       const { message } = res.data;
