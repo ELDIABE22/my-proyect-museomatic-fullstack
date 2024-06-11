@@ -7,10 +7,10 @@ import { searchSchema } from "@/utils/zod";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import DashboardLayout from "@/components/DashboardLayout";
-import AutocompleteMuseums from "@/components/admin/sales/AutocompleteMuseums";
-import CardTicketsSold from "@/components/admin/sales/CardTicketsSold";
-import CardTotalTicketsSold from "@/components/admin/sales/CardTotalTicketsSold";
-import SectionMuseumSales from "@/components/admin/sales/SectionMuseumSales";
+import AutocompleteMuseums from "@/components/admin/salesPage/AutocompleteMuseums";
+import CardTicketsSold from "@/components/admin/salesPage/CardTicketsSold";
+import CardTotalTicketsSold from "@/components/admin/salesPage/CardTotalTicketsSold";
+import SectionMuseumSales from "@/components/admin/salesPage/SectionMuseumSales";
 
 const SalesPage = () => {
   const [museum, setMuseum] = useState([]);

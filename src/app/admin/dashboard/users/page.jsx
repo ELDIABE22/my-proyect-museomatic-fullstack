@@ -286,7 +286,7 @@ const UsersPage = () => {
           <TableBody items={items}>
             {(item) => (
               <TableRow
-                key={item._id}
+                key={item.id}
                 emptyContent={"No hay usuarios registrados."}
               >
                 {(columnKey) => (

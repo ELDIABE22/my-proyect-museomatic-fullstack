@@ -1,6 +1,6 @@
 import { useState } from "react";
-import ModalCollection from "./ModalCollection";
 import { Card, Image, useDisclosure } from "@nextui-org/react";
+import ModalCollection from "./ModalCollection";
 
 const CardCollection = ({ collections }) => {
   const [openModalCollection, setOpenModalCollection] = useState(false);

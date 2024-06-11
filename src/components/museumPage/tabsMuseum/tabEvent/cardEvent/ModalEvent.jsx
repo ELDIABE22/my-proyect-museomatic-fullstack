@@ -139,22 +139,48 @@ const ModalEvent = ({ isOpen, onOpenChange, events, setOpenModalEvent }) => {
                   <span>{events.hora_fin}</span>
                 </div>
               </div>
-              <div>
-                <p className="font-bold text-lg">Boletería</p>
-                <Chip
-                  color={
-                    events.estado_tickets === "Disponible"
-                      ? "success"
-                      : "danger"
-                  }
-                  variant="dot"
-                >
-                  {events.estado_tickets}
-                </Chip>
+              <div className="flex flex-col gap-3 sm:gap-0 sm:flex-row justify-between">
+                {events.estado_evento === "Pendiente" && (
+                  <div>
+                    <p className="font-bold text-lg">Boletería</p>
+                    <Chip
+                      color={
+                        events.estado_tickets === "Disponible"
+                          ? "success"
+                          : "danger"
+                      }
+                      variant="dot"
+                    >
+                      {events.estado_tickets}
+                    </Chip>
+                  </div>
+                )}
+                {events.estado_evento !== "Pendiente" && (
+                  <div>
+                    <p className="font-bold text-lg">Evento</p>
+                    <Chip
+                      color={
+                        events.estado_tickets === "En curso"
+                          ? "warning"
+                          : "success"
+                      }
+                      variant="dot"
+                    >
+                      {events.estado_evento}
+                    </Chip>
+                  </div>
+                )}
               </div>
               <div>
                 <p className="font-bold text-lg">Precio del Ticket</p>
-                <span>$ {events.precio}</span>
+                <span>
+                  {parseFloat(events.precio).toLocaleString("es-CO", {
+                    style: "currency",
+                    currency: "COP",
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </span>
               </div>
             </ModalBody>
             <Divider />
@@ -162,16 +188,17 @@ const ModalEvent = ({ isOpen, onOpenChange, events, setOpenModalEvent }) => {
               <Button color="danger" variant="light" onPress={onClose}>
                 Cerrar
               </Button>
-              {events.estado_tickets === "Disponible" && (
-                <Button
-                  isLoading={creatingPayment}
-                  onPress={handlePayTicket}
-                  color="success"
-                  variant="shadow"
-                >
-                  Comprar
-                </Button>
-              )}
+              {events.estado_tickets === "Disponible" &&
+                events.estado_evento === "Pendiente" && (
+                  <Button
+                    isLoading={creatingPayment}
+                    onPress={handlePayTicket}
+                    color="success"
+                    variant="shadow"
+                  >
+                    Comprar
+                  </Button>
+                )}
             </ModalFooter>
           </>
         )}

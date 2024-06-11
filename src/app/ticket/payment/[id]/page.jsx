@@ -1,8 +1,8 @@
 "use client";
 
-import axios from "axios";
-import TabsTicket from "@/components/TabsTicket";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import TabsTicket from "@/components/ticketPage/paymentPage/tabsTicket/TabsTicket";
 import toast from "react-hot-toast";
 
 const TicketPaymentPage = ({ params }) => {
@@ -46,12 +46,14 @@ const TicketPaymentPage = ({ params }) => {
   }, []);
 
   return (
-    <section className="min-h-screen flex flex-col justify-center items-center gap-3">
+    <section className="min-h-screen flex flex-col justify-center items-center gap-3 overflow-x-auto">
       {loading ? (
         <p className="text-2xl font-bold">Cargando...</p>
       ) : (
         <>
-          <h2 className="text-3xl font-bold">Detalles de la compra</h2>
+          <h2 className="text-3xl font-bold text-center">
+            Detalles de la compra
+          </h2>
           <TabsTicket params={params} ticketTotal={ticketTotal} />
         </>
       )}

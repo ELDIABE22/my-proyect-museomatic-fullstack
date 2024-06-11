@@ -97,7 +97,7 @@ const EventsPage = () => {
                   isPressable
                   className="transition hover:scale-105 h-[300px] w-[300px]"
                 >
-                  <Link href={`/admin/dashboard/events/update/${ev.id}`}>
+                  <Link href={`/admin/dashboard/events/${ev.id}`}>
                     <CardHeader className="flex flex-col font-bold text-lg text-center">
                       {ev.nombre}
                       <p className="text-xs text-gray font-normal">

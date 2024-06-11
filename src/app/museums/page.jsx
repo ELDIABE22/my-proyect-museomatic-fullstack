@@ -1,6 +1,6 @@
 "use client";
 
-import CardMuseums from "@/components/CardMuseums";
+import CardMuseums from "@/components/museumPage/CardMuseums";
 import { useMuseum } from "@/context/MuseumContext";
 
 const MuseumsPage = () => {

@@ -4,7 +4,7 @@ import Clock from "@/components/icons/Clock";
 import axios from "axios";
 import Image from "next/image";
 import MapIcon from "@/components/icons/MapIcon";
-import TabsMuseum from "@/components/TabsMuseum";
+import TabsMuseum from "@/components/museumPage/tabsMuseum/TabsMuseum";
 import { Divider, Link } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { formatearFecha, formatearHora } from "@/utils/formateDate";
@@ -150,21 +150,30 @@ const MuseumPage = ({ params }) => {
               </div>
             </div>
             <div>
-              <p className="font-bold  text-base sm:text-lg">
+              <p className="font-bold text-base sm:text-lg">
                 Precio de entrada
               </p>
-              <span>$ {museum.precio_entrada}</span>
+              <span>
+                {parseFloat(museum.precio_entrada).toLocaleString("es-CO", {
+                  style: "currency",
+                  currency: "COP",
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </span>
             </div>
             <div>
               <p className="font-bold text-base sm:text-lg">
                 Sitio web oficial
               </p>
-              <Link
-                href={museum.sitio_web}
-                className="block overflow-hidden whitespace-normal"
-              >
-                {museum.sitio_web}
-              </Link>
+              <div className="flex">
+                <Link
+                  href={museum.sitio_web}
+                  className="overflow-hidden whitespace-normal"
+                >
+                  {museum.sitio_web}
+                </Link>
+              </div>
             </div>
           </div>
 

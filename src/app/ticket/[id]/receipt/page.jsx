@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import CardReceipt from "@/components/CardReceipt";
+import CardReceipt from "@/components/ticketPage/receiptPage/CardReceipt";
 import { useRouter } from "next/navigation";
 import { formatearFecha } from "@/utils/formateDate";
 import { useEffect, useState } from "react";

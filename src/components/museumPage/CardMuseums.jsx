@@ -1,6 +1,6 @@
 import { Card, Image } from "@nextui-org/react";
-import ArrowTrendingDown from "./icons/ArrowTrendingDown";
 import Link from "next/link";
+import ArrowTrendingDown from "../icons/ArrowTrendingDown";
 
 const CardMuseums = ({ museums }) => {
   return (
@@ -42,7 +42,12 @@ const CardMuseums = ({ museums }) => {
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center font-semibold">
-                $ {museums.precio_entrada}
+                {parseFloat(museums.precio_entrada).toLocaleString("es-CO", {
+                  style: "currency",
+                  currency: "COP",
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
               </div>
             </div>
           </div>
